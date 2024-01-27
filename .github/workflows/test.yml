@@ -38,5 +38,5 @@ jobs:
       - name: Convert OVA to QCOW2
         run: |
           tar xtvf nixos.ova
-          qemu-img convert  -f vmdk -O qcow2 latest-nixos-x86_64-linux.vmdk nixos.img
+          qemu-img convert  -f vmdk -O qcow2 *.vmdk nixos.img
           
