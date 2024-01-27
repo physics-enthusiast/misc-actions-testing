@@ -34,8 +34,8 @@ jobs:
           brew install qemu --force
       - name: Fetch prebuilt NixOS image
         run: |
-          aria2c https://channels.nixos.org/nixos-23.11/latest-nixos-x86_64-linux.ova -o nixos.ova
-      - name: Convert OVA to QCOW2
+          aria2c https://channels.nixos.org/nixos-23.11/latest-nixos-minimal-x86_64-linux.iso -o nixos.iso
+      - name: Convert ISO to QCOW2
         run: |
-          qemu-img convert  -f vmdk -O qcow2 $(tar --wildcards -xvf nixos.ova '*.vmdk') nixos.img
+          qemu-img convert -O qcow2 nixos.iso nixos.img
           
