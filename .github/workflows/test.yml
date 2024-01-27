@@ -41,6 +41,6 @@ jobs:
           qemu-img convert -O qcow2 nixos.iso nixos.img
       - name: Start the VM
         run: |
-          qemu-system-x86_64 -nographic -serial mon:stdio -drive format=qcow2,file=nixos.img
+          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -drive format=qcow2,file=nixos.img
           ls
           
