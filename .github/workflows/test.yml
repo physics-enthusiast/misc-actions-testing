@@ -24,8 +24,7 @@ jobs:
       - uses: MinoruSekine/setup-scoop@v2
       - name: Install QEMU
         run: |
-          scoop install qemu
-          Get-ChildItem -Path ~\scoop\shim
-          $env:Path = ($env:Path + '~\scoop\shim') -join ';'
+          choco install qemu
+          [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\qemu", "Machine")
       - run: |
           qemu-system-x86_64 --help
