@@ -41,4 +41,5 @@ jobs:
       - name: Start the VM
         run: |
           qemu-system-x86_64 -nographic -serial mon:stdio -drive format=qcow2,file=nixos.img
+          ls
           
