@@ -25,6 +25,6 @@ jobs:
         run: |
           choco install qemu
           [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\qemu\", "Machine")
-          "C:\Program Files\qemu\qemu-system-x86_64.exe"
+          Get-ChildItem -Path "C:\Program Files\qemu"
       - run: |
           qemu-system-x86_64 --help
