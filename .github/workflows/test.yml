@@ -24,7 +24,6 @@ jobs:
       - name: Install QEMU
         run: |
           choco install qemu
-          [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\qemu\", "Machine")
-          Get-ChildItem -Path "C:\Program Files\qemu"
+          Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
       - run: |
           qemu-system-x86_64 --help
