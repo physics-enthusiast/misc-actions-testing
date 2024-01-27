@@ -21,7 +21,6 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: MinoruSekine/setup-scoop@v2
       - name: Install QEMU
         run: |
           choco install qemu
