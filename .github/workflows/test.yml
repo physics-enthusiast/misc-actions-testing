@@ -25,6 +25,7 @@ jobs:
       - name: Install QEMU
         run: |
           scoop install qemu
+          Get-ChildItem -Path ~\scoop\shim
           $env:Path = ($env:Path + '~\scoop\shim') -join ';'
       - run: |
           qemu-system-x86_64 --help
