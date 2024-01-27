@@ -1,29 +1,35 @@
 name: Test
 on:
   push:
+concurrency: 
+  group: test
+  cancel-in-progress: true
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
+  builds:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+          - name: Linux
+            os: ubuntu-latest
+          - name: Darwin
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Install QEMU
-        run: |
-          sudo apt-get -y install qemu-system
-      - run: |
-          qemu-system-x86_64 --help
-
-  macos:
-    runs-on: macos-latest
-    steps:
-      - run: |
-          qemu-system-x86_64 --help
-
-  windows:
-    runs-on: windows-latest
-    steps:
-      - name: Install QEMU
+      - name: Install QEMU (Windows)
+        if: runner.os == 'Windows'
         run: |
           choco install qemu
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
-      - run: |
-          qemu-system-x86_64 --help
+      - name: Install QEMU (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get -y install qemu-system
+      - name: Install QEMU (Darwin)
+        if: runner.os == 'macOS'
+        run: |
+          brew install qemu --force
+          
