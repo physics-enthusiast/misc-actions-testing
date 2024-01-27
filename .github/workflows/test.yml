@@ -32,4 +32,12 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install qemu --force
+      - name: Fetch prebuilt NixOS image
+        uses: suisei-cn/actions-download-file@v1.6.0
+        with:
+          url: https://channels.nixos.org/nixos-23.11/latest-nixos-x86_64-linux.ova
+          target: ./
+      - name: Convert OVA to QCOW2
+        run: |
+          qemu-img convert -O qcow2 latest-nixos-x86_64-linux.ova nixos.img
           
