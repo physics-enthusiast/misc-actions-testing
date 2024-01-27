@@ -21,9 +21,9 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - uses: MinoruSekine/setup-scoop@v2
       - name: Install QEMU
         run: |
-          powershell -ExecutionPolicy Bypass -command "iex (new-object net.webclient).downloadstring('https://get.scoop.sh')"
           scoop install qemu
       - run: |
           qemu-system-x86_64 --help
