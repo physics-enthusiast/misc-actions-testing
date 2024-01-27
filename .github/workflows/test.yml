@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Install QEMU
         run: |
-          choco install qemu
-          $env:Path = ($env:Path + 'C:\Program Files\qemu') -join ';'
+          powershell -ExecutionPolicy Bypass -command "iex (new-object net.webclient).downloadstring('https://get.scoop.sh')"
+          scoop install qemu
       - run: |
           qemu-system-x86_64 --help
