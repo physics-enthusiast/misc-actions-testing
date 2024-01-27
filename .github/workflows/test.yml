@@ -6,6 +6,8 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          qemu --help
       - name: Install QEMU
         run: |
           sudo apt-get -y install qemu-system
@@ -13,6 +15,8 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
+      - run: |
+          qemu --help
       - name: Install QEMU
         run: |
           brew install qemu
@@ -20,6 +24,8 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - run: |
+          qemu --help
       - name: Install QEMU
         run: |
           choco install qemu
