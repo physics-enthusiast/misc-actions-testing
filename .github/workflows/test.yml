@@ -25,6 +25,6 @@ jobs:
       - name: Install QEMU
         run: |
           scoop install qemu
-          $env:Path = ($env:Path + '~\scoop\apps\qemu\8.2.0') -join ';'
+          $env:Path = ($env:Path + '~\scoop\shim') -join ';'
       - run: |
           qemu-system-x86_64 --help
