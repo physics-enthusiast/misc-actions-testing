@@ -1,31 +1,29 @@
 name: Test
 on:
   push:
-
 jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          qemu-system-x86_64 --help
       - name: Install QEMU
         run: |
           sudo apt-get -y install qemu-system
-      - run: |
-          qemu --help
-
   macos:
     runs-on: macos-latest
     steps:
+      - run: |
+          qemu-system-x86_64 --help
       - name: Install QEMU
         run: |
           brew install qemu
-      - run: |
-          qemu --help
-
+  
   windows:
     runs-on: windows-latest
     steps:
+      - run: |
+          qemu-system-x86_64 --help
       - name: Install QEMU
         run: |
           choco install qemu
-      - run: |
-          qemu --help
