@@ -36,11 +36,11 @@ jobs:
       - name: Fetch prebuilt NixOS image
         run: |
           aria2c https://channels.nixos.org/nixos-23.11/latest-nixos-minimal-x86_64-linux.iso -o nixos.iso
-      - name: Convert ISO to QCOW2
+      - name: Create QCOW2 image
         run: |
-          qemu-img convert -O qcow2 nixos.iso nixos.img
+          qemu-img create -f qcow2 nixos.qcow2 16G
       - name: Start the VM
         run: |
-          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -drive format=qcow2,file=nixos.img
+          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda nixos.qcow2 -cdrom nixos.iso -boot d 
           ls
           
