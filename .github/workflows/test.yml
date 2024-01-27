@@ -37,5 +37,5 @@ jobs:
           aria2c https://channels.nixos.org/nixos-23.11/latest-nixos-x86_64-linux.ova -o nixos.ova
       - name: Convert OVA to QCOW2
         run: |
-          qemu-img convert  -f vmdk -O qcow2 $(tar xvf --wildcards nixos.ova '*.vmdk') nixos.img
+          qemu-img convert  -f vmdk -O qcow2 $(tar --wildcards -xvf nixos.ova '*.vmdk') nixos.img
           
