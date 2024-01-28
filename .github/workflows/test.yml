@@ -24,7 +24,7 @@ jobs:
         uses: Vampire/setup-wsl@v2
       - name: Install Nix
         run: |
-          uname
+          sudo apt-get install -y curl
           bash <(curl -L https://nixos.org/nix/install)
         shell: wsl-bash {0}
           
