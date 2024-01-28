@@ -83,7 +83,7 @@ jobs:
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_ENV/p:TEST_VAR/p
-          TEST_VAR: ./
+          TEST_VAR: ${{ runner.temp }}
 
 
           
