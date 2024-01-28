@@ -50,7 +50,7 @@ jobs:
       - name: Install Nix
         run: |
           touch meta-data
-          touch meta-data
+          touch user-data
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
       - name: Fetch prebuilt Debian image
