@@ -27,5 +27,5 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y curl xz
           bash <(curl -L https://nixos.org/nix/install)
-        shell: wsl-bash
+        shell: wsl-bash {0}
           
