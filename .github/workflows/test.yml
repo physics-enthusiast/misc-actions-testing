@@ -70,6 +70,7 @@ jobs:
           ssh_authorized_keys:
             - ${{ env.PUBLIC_KEY }}
           EOF
+          cat user-data
           touch meta-data
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
