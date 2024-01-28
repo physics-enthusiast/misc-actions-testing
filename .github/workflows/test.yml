@@ -60,10 +60,10 @@ jobs:
       - name: Generate SSH keys
         run: |
           ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
-          cat sshkey.pub
-          cat sshkey
-          echo "PUBLIC_KEY='$(cat sshkey.pub)'" >> $GITHUB_ENV
-          echo "PRIVATE_KEY='$(cat sshkey)'" >> $GITHUB_ENV
+          PUB="$(cat sshkey.pub)"
+          PRI="$(cat ssh key)"
+          echo "PUBLIC_KEY=$PUB" >> $GITHUB_ENV
+          echo "PRIVATE_KEY=$PRI" >> $GITHUB_ENV
         shell: wsl-bash {0}
       - name: Prepare cloud-init data
         run: |
