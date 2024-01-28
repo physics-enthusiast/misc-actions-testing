@@ -22,7 +22,7 @@ jobs:
     steps:
       - if: runner.os == 'Windows'
         run: |
-          wsl --install
+          wsl --install -d Debian
       - name: Install Nix
         run: |
           sh <(curl -L https://nixos.org/nix/install) --no-daemon
