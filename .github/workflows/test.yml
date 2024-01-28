@@ -69,6 +69,9 @@ jobs:
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_ENV
+      - name: Test env vars
+        run: |
+          echo "$PUBLIC_KEY"
       - name: Prepare cloud-init data
         run: |
           echo "$PUBLIC_KEY"
