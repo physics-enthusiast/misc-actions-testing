@@ -61,13 +61,13 @@ jobs:
         run: |
           ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
           PUB="$(cat sshkey.pub)"
-          PRI="$(cat ssh key)"
+          PRI="$(cat sshkey)"
           echo "PUBLIC_KEY=$PUB" >> $GITHUB_ENV
           echo "PRIVATE_KEY=$PRI" >> $GITHUB_ENV
         shell: wsl-bash {0}
       - name: Prepare cloud-init data
         run: |
-          cat < EOF > user-data
+          cat <<EOF >> user-data
           #cloud-config
           ssh_authorized_keys:
             - ${{ env.PUBLIC_KEY }}
