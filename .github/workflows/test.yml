@@ -22,10 +22,15 @@ jobs:
     steps:
       - if: runner.os == 'Windows'
         uses: Vampire/setup-wsl@v2
+      - if: runner.os == 'Windows'
+        run: |
+          echo "C:\\Windows\\System32\\bash.exe" >> $GITHUB_PATH
+          wsl-bash sudo apt-get update
+          wsl-bash sudo apt-get install -y curl xz-utils qemu-user-static
+          wsl-bash sudo update-binfmts --install i386 /usr/bin/qemu-i386-static --magic '\x7fELF\x01\x01\x01\x03\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x03\x00\x01\x00\x00\x00' --mask '\xff\xff\xff\xff\xff\xff\xff\xfc\xff\xff\xff\xff\xff\xff\xff\xff\xf8\xff\xff\xff\xff\xff\xff\xff'
       - name: Install Nix
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl xz-utils
+          sudo service binfmt-support start
           bash <(curl -L https://nixos.org/nix/install)
-        shell: wsl-bash {0}
+        shell: bash
           
