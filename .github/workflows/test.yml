@@ -21,9 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - if: runner.os == 'Windows'
-        run: |
-          wsl --update
-          wsl --install -d Debian
+        uses: Vampire/setup-wsl@v2
       - name: Install Nix
         run: |
           sh <(curl -L https://nixos.org/nix/install)
