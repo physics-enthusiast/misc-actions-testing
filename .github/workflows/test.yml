@@ -20,30 +20,11 @@ jobs:
             os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install QEMU (Windows)
-        if: runner.os == 'Windows'
+      - if: runner.os == 'Windows'
         run: |
-          wsl --install -d ubuntu
-          wsl-bash
-          uname
-          choco install qemu
-          Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
-      - name: Install QEMU (Linux)
-        if: runner.os == 'Linux'
+          wsl --install
+      - name: Install Nix
         run: |
-          sudo apt-get -y install qemu-system
-      - name: Install QEMU (Darwin)
-        if: runner.os == 'macOS'
-        run: |
-          brew install qemu --force
-      - name: Fetch prebuilt NixOS image
-        run: |
-          aria2c https://channels.nixos.org/nixos-23.11/latest-nixos-minimal-x86_64-linux.iso -o nixos.iso
-      - name: Create QCOW2 image
-        run: |
-          qemu-img create -f qcow2 nixos.qcow2 16G
-      - name: Start the VM
-        run: |
-          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda nixos.qcow2 -cdrom nixos.iso -boot d 
-          ls
+          sh <(curl -L https://nixos.org/nix/install) --no-daemon
+        shell: bash
           
