@@ -25,7 +25,7 @@ jobs:
       - name: Install Nix
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl xz
+          sudo apt-get install -y curl xz-utils
           bash <(curl -L https://nixos.org/nix/install)
         shell: wsl-bash {0}
           
