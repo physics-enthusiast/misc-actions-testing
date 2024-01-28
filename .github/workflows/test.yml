@@ -68,7 +68,7 @@ jobs:
           } >> "$GITHUB_ENV"
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV
+          WSLENV: GITHUB_ENV:PUBLIC_KEY:PRIVATE_KEY
       - name: Test env vars
         run: |
           echo "$PUBLIC_KEY"
