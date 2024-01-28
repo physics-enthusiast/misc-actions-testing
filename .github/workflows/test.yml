@@ -26,6 +26,7 @@ jobs:
         with:
           additional-packages:
             mkisofs
+            openssh-client
       - name: Prepare common shell (Linux)
         if: runner.os == 'Linux'
         run: |
