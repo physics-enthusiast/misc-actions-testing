@@ -67,6 +67,8 @@ jobs:
             echo EOF
           } >> "$GITHUB_ENV"
         shell: wsl-bash {0}
+        env:
+          WSLENV: GITHUB_ENV
       - name: Prepare cloud-init data
         run: |
           cat <<EOF >> user-data
