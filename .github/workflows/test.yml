@@ -26,5 +26,5 @@ jobs:
         run: |
           uname
           bash <(curl -L https://nixos.org/nix/install)
-        shell: bash
+        shell: wsl-bash
           
