@@ -66,13 +66,11 @@ jobs:
             cat sshkey
             echo EOF
           } >> "$GITHUB_ENV"
-          echo $GITHUB_ENV
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_ENV
       - name: Prepare cloud-init data
         run: |
-          echo $GITHUB_ENV
           cat <<EOF >> user-data
           #cloud-config
           ssh_authorized_keys:
@@ -83,7 +81,7 @@ jobs:
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV
+          WSLENV: PUBLIC_KEY
 
 
           
