@@ -71,6 +71,7 @@ jobs:
           WSLENV: GITHUB_ENV/p
       - name: Prepare cloud-init data
         run: |
+          echo $TEST_VAR
           cat <<EOF >> user-data
           #cloud-config
           ssh_authorized_keys:
@@ -81,7 +82,8 @@ jobs:
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV/p
+          WSLENV: GITHUB_ENV/p:TEST_VAR/p
+          TEST_VAR: ./
 
 
           
