@@ -69,12 +69,8 @@ jobs:
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_ENV/p
-      - name: Test env vars
-        run: |
-          echo "$PUBLIC_KEY"
       - name: Prepare cloud-init data
         run: |
-          echo "$PUBLIC_KEY"
           cat <<EOF >> user-data
           #cloud-config
           ssh_authorized_keys:
