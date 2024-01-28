@@ -57,11 +57,20 @@ jobs:
       - name: Fetch prebuilt Debian image
         run: |
           aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o debian.iso
+      - name: Generate SSH keys
+        run: |
+          ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
+          echo "PUBLIC_KEY=$(cat sshkey.pub)" >> $GITHUB_ENV
+          echo "PRIVATE_KEY=$(cat sshkey)" >> $GITHUB_ENV
+        shell: wsl-bash {0}
       - name: Prepare cloud-init data
         run: |
+          cat < EOF > user-data
+          #cloud-config
+          ssh_authorized_keys:
+            - ${{ env.PUBLIC_KEY }}
+          EOF
           touch meta-data
-          ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
-          cat sshkey.pub
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
 
