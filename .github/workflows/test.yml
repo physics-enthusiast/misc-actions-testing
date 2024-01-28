@@ -20,25 +20,41 @@ jobs:
             os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - if: runner.os == 'Windows'
+      - name: Prepare common shell
+        if: runner.os == 'Windows'
         uses: Vampire/setup-wsl@v2
-      - if: runner.os == 'Windows'
-        run: |
-          echo "C:\\Windows\\System32\\bash.exe" >> $GITHUB_PATH
-      - if: runner.os == 'Windows'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl xz-utils qemu-user-static
-          sudo update-binfmts --install i386 /usr/bin/qemu-i386-static --magic '\x7fELF\x01\x01\x01\x03\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x03\x00\x01\x00\x00\x00' --mask '\xff\xff\xff\xff\xff\xff\xff\xfc\xff\xff\xff\xff\xff\xff\xff\xff\xf8\xff\xff\xff\xff\xff\xff\xff'
-          sudo install -d -m755 -o $(id -u) -g $(id -g) /nix
-        shell: wsl-bash {0}
-      - if: runner.os == 'Linux' || runner.os == 'macOS' 
+        with:
+          additional-packages:
+            mkisofs
+      - name: Prepare common shell
+        if: runner.os == 'Linux' || runner.os == 'macOS' 
         run: |
           mkdir bash-redirect
           ln -s $(which bash) bash-redirect/wsl-bash
           echo "$PWD/bash-redirect" >> $GITHUB_PATH
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install qemu
+          Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
+          echo "C:\\Windows\\System32\\bash.exe" >> $GITHUB_PATH
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get -y install qemu-system mkisofs
+      - name: Install dependencies (Darwin)
+        if: runner.os == 'macOS'
+        run: |
+          brew install qemu --force
+          brew install dvdrtools
       - name: Install Nix
         run: |
-          sh <(curl -L https://nixos.org/nix/install) --no-daemon
+          touch meta-data
+          touch meta-data
+          mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
+      - name: Fetch prebuilt Debian image
+        run: |
+          aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o debian.iso
+
           
