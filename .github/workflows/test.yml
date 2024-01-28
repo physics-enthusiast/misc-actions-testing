@@ -25,6 +25,6 @@ jobs:
       - name: Install Nix
         run: |
           uname
-          sh <(curl -L https://nixos.org/nix/install)
+          bash <(curl -L https://nixos.org/nix/install)
         shell: bash
           
