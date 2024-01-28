@@ -23,6 +23,8 @@ jobs:
       - name: Install QEMU (Windows)
         if: runner.os == 'Windows'
         run: |
+          wsl
+          uname
           choco install qemu
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
       - name: Install QEMU (Linux)
