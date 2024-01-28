@@ -35,7 +35,7 @@ jobs:
       - if: runner.os == 'Linux' || runner.os == 'macOS' 
         run: |
           mkdir bash-redirect
-          ln $(whereis bash) bash-redirect/wsl-bash
+          ln $(which bash) bash-redirect/wsl-bash
           echo "$PWD/bash-redirect" >> $GITHUB_PATH
       - name: Install Nix
         run: |
