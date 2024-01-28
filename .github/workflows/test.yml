@@ -61,6 +61,7 @@ jobs:
         run: |
           touch meta-data
           ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
+          cat sshkey.pub
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
 
