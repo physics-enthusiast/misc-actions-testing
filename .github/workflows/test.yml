@@ -20,14 +20,20 @@ jobs:
             os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Prepare common shell
+      - name: Prepare common shell (Windows)
         if: runner.os == 'Windows'
         uses: Vampire/setup-wsl@v2
         with:
           additional-packages:
             mkisofs
-      - name: Prepare common shell
-        if: runner.os == 'Linux' || runner.os == 'macOS' 
+      - name: Prepare common shell (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir bash-redirect
+          ln -s $(which bash) bash-redirect/wsl-bash
+          echo "$PWD/bash-redirect" >> $GITHUB_PATH
+      - name: Prepare common shell (Darwin)
+        if: runner.os == 'macOS'
         run: |
           mkdir bash-redirect
           ln -s $(which bash) bash-redirect/wsl-bash
@@ -47,14 +53,15 @@ jobs:
         run: |
           brew install qemu --force
           brew install dvdrtools
-      - name: Install Nix
-        run: |
-          touch meta-data
-          touch user-data
-          mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
-        shell: wsl-bash {0}
       - name: Fetch prebuilt Debian image
         run: |
           aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o debian.iso
+      - name: Prepare cloud-init data
+        run: |
+          touch meta-data
+          ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
+          mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
+        shell: wsl-bash {0}
+
 
           
