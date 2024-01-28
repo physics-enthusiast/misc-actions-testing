@@ -80,6 +80,8 @@ jobs:
           touch meta-data
           mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
         shell: wsl-bash {0}
+        env:
+          WSLENV: GITHUB_ENV
 
 
           
