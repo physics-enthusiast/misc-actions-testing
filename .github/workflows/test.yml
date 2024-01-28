@@ -30,7 +30,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y curl xz-utils qemu-user-static
           sudo update-binfmts --install i386 /usr/bin/qemu-i386-static --magic '\x7fELF\x01\x01\x01\x03\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x03\x00\x01\x00\x00\x00' --mask '\xff\xff\xff\xff\xff\xff\xff\xfc\xff\xff\xff\xff\xff\xff\xff\xff\xf8\xff\xff\xff\xff\xff\xff\xff'
-        shell: bash
+        shell: wsl-bash {0}
       - name: Install Nix
         run: |
           sudo install -d -m755 -o $(id -u) -g $(id -g) /nix
