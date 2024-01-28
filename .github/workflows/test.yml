@@ -32,8 +32,13 @@ jobs:
           sudo update-binfmts --install i386 /usr/bin/qemu-i386-static --magic '\x7fELF\x01\x01\x01\x03\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x03\x00\x01\x00\x00\x00' --mask '\xff\xff\xff\xff\xff\xff\xff\xfc\xff\xff\xff\xff\xff\xff\xff\xff\xf8\xff\xff\xff\xff\xff\xff\xff'
           sudo install -d -m755 -o $(id -u) -g $(id -g) /nix
         shell: wsl-bash {0}
+      - if: runner.os == 'Linux' || runner.os == 'macOS' 
+        run: |
+          mkdir bash-redirect
+          ln $(whereis bash) bash-redirect/wsl-bash
+          echo "$PWD/bash-redirect" >> $GITHUB_PATH
       - name: Install Nix
         run: |
           bash <(curl -L https://nixos.org/nix/install)
-        shell: bash
+        shell: wsl-bash {0}
           
