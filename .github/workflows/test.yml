@@ -39,6 +39,6 @@ jobs:
           echo "$PWD/bash-redirect" >> $GITHUB_PATH
       - name: Install Nix
         run: |
-          bash <(curl -L https://nixos.org/nix/install)
+          sh <(curl -L https://nixos.org/nix/install)
         shell: wsl-bash {0}
           
