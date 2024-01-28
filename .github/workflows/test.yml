@@ -20,6 +20,11 @@ jobs:
             os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Get paths
+        run: |
+          import os
+          relpath = ${{ runner.temp }} or "./"
+          abspath = os.path.abspath(relpath) 
       - name: Prepare common shell (Windows)
         if: runner.os == 'Windows'
         uses: Vampire/setup-wsl@v2
