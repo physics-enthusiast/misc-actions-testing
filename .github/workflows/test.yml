@@ -25,6 +25,6 @@ jobs:
           wsl --install -d Debian
       - name: Install Nix
         run: |
-          sh <(curl -L https://nixos.org/nix/install) --no-daemon
+          sh <(curl -L https://nixos.org/nix/install)
         shell: bash
           
