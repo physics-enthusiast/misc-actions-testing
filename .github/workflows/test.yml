@@ -159,7 +159,9 @@ jobs:
           child.logfile = sys.stdout.buffer
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
           print("SSH started") 
-          print(os.path.isfile("{os.environ['TMPDIR']}/sshkey"))
+          from pathlib import Path
+          print("{os.environ['TMPDIR']}/sshkey")
+          print(Path("{os.environ['TMPDIR']}/sshkey").my_file.is_file())
           c = Connection(
               host="127.0.0.1",
               user="debian",
