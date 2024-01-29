@@ -133,8 +133,12 @@ jobs:
         run: |
           cat <<EOF >> $TMPDIR/user-data
           #cloud-config
-          ssh_authorized_keys:
-            - ${{ env.PUBLIC_KEY }}
+          users:
+            - name: debian
+              ssh-authorized-keys: 
+                - ${{ env.PUBLIC_KEY }}
+              shell: /bin/bash
+              sudo: ALL=(ALL) NOPASSWD:ALL
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
@@ -155,6 +159,7 @@ jobs:
           child.logfile = sys.stdout.buffer
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
           print("SSH started") 
+          print(os.path.isfile("{os.environ['TMPDIR']}/sshkey"))
           c = Connection(
               host="127.0.0.1",
               user="debian",
