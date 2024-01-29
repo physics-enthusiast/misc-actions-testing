@@ -157,6 +157,9 @@ jobs:
           child.logfile = sys.stdout.buffer
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
           print("SSH started")
+          child.sendline("debian")
+          import time
+          time.sleep(20)
           c = Connection(
               host="localhost",
               user="debian",
