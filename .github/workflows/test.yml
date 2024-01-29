@@ -67,32 +67,34 @@ jobs:
         run: |
           aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o debian.iso
       - name: Generate SSH keys
+        id: ssh_keygen
         run: |
-          ssh-keygen -b 2048 -t rsa -f sshkey -q -N ""
-          echo "PUBLIC_KEY=$(cat sshkey.pub)" >> $GITHUB_ENV
+          ssh-keygen -b 2048 -t rsa -f $TMPDIR/sshkey -q -N ""
+          echo "PUBLIC_KEY=$(cat $TMPDIR/sshkey.pub)" >> $GITHUB_OUTPUT
           {
             echo 'PRIVATE_KEY<<EOF'
-            cat sshkey
+            cat $TMPDIR/sshkey
             echo EOF
-          } >> "$GITHUB_ENV"
+          } >> "$GITHUB_OUTPUT"
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV/p
+          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
+          TMPDIR: ${{ runner.temp }}
       - name: Prepare cloud-init data
         run: |
-          echo $TEST_VAR
-          cat <<EOF >> user-data
+          cat <<EOF >> $TMPDIR/user-data
           #cloud-config
           ssh_authorized_keys:
             - ${{ env.PUBLIC_KEY }}
           EOF
-          cat user-data
-          touch meta-data
-          mkisofs -output seed.iso -volid cidata -joliet -rock user-data meta-data
+          cat $TMPDIR/user-data
+          touch $TMPDIR/meta-data
+          mkisofs -output $TMPDIR/seed.iso -volid cidata -joliet -rock $TMPDIR/user-data $TMPDIR/meta-data
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_ENV/p:TEST_VAR/p
-          TEST_VAR: ${{ runner.temp }}
+          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p:PUBLIC_KEY
+          TMPDIR: ${{ runner.temp }}
+          PUBLIC_KEY: ${{ STEPS.SSH_KEYGEN.OUTPUTS.PUBLIC_KEY }} 
 
 
           
