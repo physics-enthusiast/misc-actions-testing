@@ -21,10 +21,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Get paths
+        id: get_paths
         run: |
           import os
           relpath = ${{ runner.temp }} or "./"
-          abspath = os.path.abspath(relpath) 
+          abspath = os.path.abspath(relpath)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              print(f'OUTDIR={abspath}', file=fh)
+        shell: python
       - name: Prepare common shell (Windows)
         if: runner.os == 'Windows'
         uses: Vampire/setup-wsl@v2
