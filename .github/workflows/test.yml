@@ -101,7 +101,7 @@ jobs:
       - name: Fetch prebuilt Debian image
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
         run: |
-          sudo aria2c --dir="$TMPDIR" --out=debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+          sudo aria2c --dir="$TMPDIR" --out=debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
