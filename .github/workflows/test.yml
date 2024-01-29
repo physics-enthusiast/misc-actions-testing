@@ -99,7 +99,11 @@ jobs:
           PUBLIC_KEY: ${{ STEPS.SSH_KEYGEN.OUTPUTS.PUBLIC_KEY }} 
       - name: Start VM
         run: |
-          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda $TMPDIR/debian.qcow2 -cdrom $TMPDIR/seed.iso
+          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda $TMPDIR/debian.qcow2 -cdrom $TMPDIR/seed.iso | grep -qe "Started ssh.service"
+          if [ $? == 1 ]; then
+            echo "Search terminated without finding the pattern"
+          fi
+        shell: bash
         env:
           TMPDIR: ${{ runner.temp }}
           
