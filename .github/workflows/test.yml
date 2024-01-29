@@ -98,4 +98,6 @@ jobs:
       - name: Start VM
         run: |
           qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda $TMPDIR/debian.qcow2 -cdrom $TMPDIR/seed.iso
+        env:
+          TMPDIR: ${{ runner.temp }}
           
