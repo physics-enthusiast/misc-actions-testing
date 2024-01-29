@@ -72,7 +72,9 @@ jobs:
       - name: Fetch prebuilt Debian image manifest
         run: |
           aria2c --dir="$TMPDIR" --out=debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.json
+        shell: wsl-bash {0}
         env:
+          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
           TMPDIR: ${{ runner.temp }}
       - name: Pass manifest to step context
         id: read_manifest
