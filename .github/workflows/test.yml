@@ -150,7 +150,7 @@ jobs:
           import sys
           from pexpect import popen_spawn
           from fabric import Connection
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp $(nproc) -net nic -net user,hostfwd=tcp::2222-:22 -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp {os.cpu_count()} -net nic -net user,hostfwd=tcp::2222-:22 -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso"
           child = popen_spawn.PopenSpawn(cmd)
           child.logfile = sys.stdout.buffer
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
