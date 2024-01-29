@@ -20,6 +20,12 @@ jobs:
             os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: BSFishy/pip-action@v1
+        with:
+          packages: pexpect
       - name: Get paths
         id: get_paths
         run: |
@@ -99,11 +105,15 @@ jobs:
           PUBLIC_KEY: ${{ STEPS.SSH_KEYGEN.OUTPUTS.PUBLIC_KEY }} 
       - name: Start VM
         run: |
-          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda $TMPDIR/debian.qcow2 -cdrom $TMPDIR/seed.iso | grep -qe "Started ssh.service"
-          if [ $? == 1 ]; then
-            echo "Search terminated without finding the pattern"
-          fi
-        shell: bash
+          import os
+          import sys
+          import pexpect
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso" 
+          child = pexpect.spawn(cmd)
+          child.logfile = sys.stdout
+          child.expect('Started ssh.service', timeout=None)
+          print("SSH started") 
+        shell: python
         env:
           TMPDIR: ${{ runner.temp }}
           
