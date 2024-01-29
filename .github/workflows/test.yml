@@ -136,7 +136,7 @@ jobs:
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso" 
           child = pexpect.spawn(cmd, encoding='utf-8')
           child.logfile = sys.stdout
-          child.expect('Started ssh.service', timeout=None)
+          child.expect('Started ssh\.service', timeout=None)
           print("SSH started") 
         shell: python
         env:
