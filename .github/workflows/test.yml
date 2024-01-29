@@ -87,18 +87,25 @@ jobs:
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
           TMPDIR: ${{ runner.temp }}
-      - name: Enable cache
-        id: cache-image
-        uses: actions/cache@v4
+      - name: Restore cache
+        id: restore-cache-image
+        uses: actions/cache/restore@v4
         with:
           path: ${{ runner.temp }}/debian.qcow2
           key: ${{ fromJson(steps.read_manifest.outputs.DEBIAN_JSON).items[0].data.info.version }}
       - name: Fetch prebuilt Debian image
-        if: steps.cache-image.outputs.cache-hit != 'true' 
+        if: steps.restore-cache-image.outputs.cache-hit != 'true' 
         run: |
           aria2c -d "$TMPDIR" -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
         env:
           TMPDIR: ${{ runner.temp }}
+      - name: Save cache
+        id: save-cache-image
+        uses: actions/cache/save@v4
+        if: steps.restore-cache-image.outputs.cache-hit != 'true'
+        with:
+          path: ${{ runner.temp }}/debian.qcow2
+          key: ${{ fromJson(steps.read_manifest.outputs.DEBIAN_JSON).items[0].data.info.version }}
       - name: Generate SSH keys
         id: ssh_keygen
         run: |
