@@ -68,7 +68,7 @@ jobs:
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get -y install qemu-system mkisofs
+          sudo apt-get -y install qemu-system mkisofs nmap
       - name: Install dependencies (Darwin)
         if: runner.os == 'macOS'
         run: |
