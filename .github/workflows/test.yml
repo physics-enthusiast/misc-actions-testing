@@ -141,13 +141,13 @@ jobs:
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p:PUBLIC_KEY
           TMPDIR: ${{ runner.temp }}
-          PUBLIC_KEY: ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }} 
+          PUBLIC_KEY: ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
       - name: Start VM
         run: |
           import os
           import sys
           from pexpect import popen_spawn
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -net nic -net user,hostfwd=tcp::2222-:22 -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso"
           child = popen_spawn.PopenSpawn(cmd)
           child.logfile = sys.stdout.buffer
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
@@ -155,4 +155,15 @@ jobs:
         shell: python
         env:
           TMPDIR: ${{ runner.temp }}
+      - name: Install Nix
+        id: action-ssh
+        uses: tiyee/action-ssh@release
+        with:
+          host: localhost
+          port: 2222
+          username: debian
+          privateKey: ${{ steps.ssh_keygen.outputs.PRIVATE_KEY }} 
+          command: |
+            sh <(curl -L https://nixos.org/nix/install) --daemon
+
           
