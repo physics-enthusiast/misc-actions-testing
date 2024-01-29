@@ -79,7 +79,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ runner.temp }}/debian.qcow2
-          key: ${{fromJson(${{ runner.temp }}/debian.json).items[0].data.info.version}}
+          key: ${{ fromJson("${{ runner.temp }}/debian.json").items[0].data.info.version }}
       - name: Fetch prebuilt Debian image
         run: |
           aria2c -d "$TMPDIR" -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
@@ -113,7 +113,7 @@ jobs:
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p:PUBLIC_KEY
           TMPDIR: ${{ runner.temp }}
-          PUBLIC_KEY: ${{ STEPS.SSH_KEYGEN.OUTPUTS.PUBLIC_KEY }} 
+          PUBLIC_KEY: ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }} 
       - name: Start VM
         run: |
           import os
