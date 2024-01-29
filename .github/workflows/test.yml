@@ -157,7 +157,7 @@ jobs:
           TMPDIR: ${{ runner.temp }}
       - name: Install Nix
         id: action-ssh
-        uses: tiyee/action-ssh@release
+        uses: tiyee/action-ssh@v1.0.1
         with:
           host: localhost
           port: 2222
