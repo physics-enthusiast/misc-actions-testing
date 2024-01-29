@@ -42,6 +42,7 @@ jobs:
           additional-packages:
             mkisofs
             openssh-client
+            aria2
       - name: Prepare common shell (Linux)
         if: runner.os == 'Linux'
         run: |
