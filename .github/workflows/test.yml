@@ -71,7 +71,7 @@ jobs:
           brew install dvdrtools
       - name: Fetch prebuilt Debian image
         run: |
-          aria2c -d $TMPDIR -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+          aria2c -d '$TMPDIR' -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
         env:
           TMPDIR: ${{ runner.temp }}
       - name: Generate SSH keys
@@ -109,7 +109,7 @@ jobs:
           import sys
           import pexpect
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso" 
-          child = pexpect.spawn(cmd)
+          child = pexpect.spawn(cmd, encoding='utf-8')
           child.logfile = sys.stdout
           child.expect('Started ssh.service', timeout=None)
           print("SSH started") 
