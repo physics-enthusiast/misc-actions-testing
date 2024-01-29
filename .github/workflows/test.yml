@@ -66,6 +66,8 @@ jobs:
       - name: Fetch prebuilt Debian image
         run: |
           aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o $TMPDIR/debian.qcow2
+        env:
+          TMPDIR: ${{ runner.temp }}
       - name: Generate SSH keys
         id: ssh_keygen
         run: |
