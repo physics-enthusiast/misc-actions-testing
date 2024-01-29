@@ -65,7 +65,7 @@ jobs:
           brew install dvdrtools
       - name: Fetch prebuilt Debian image
         run: |
-          aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o debian.iso
+          aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o $TMPDIR/debian.qcow2
       - name: Generate SSH keys
         id: ssh_keygen
         run: |
@@ -95,6 +95,7 @@ jobs:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p:PUBLIC_KEY
           TMPDIR: ${{ runner.temp }}
           PUBLIC_KEY: ${{ STEPS.SSH_KEYGEN.OUTPUTS.PUBLIC_KEY }} 
-
-
+      - name: Start VM
+        run: |
+          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda $TMPDIR/debian.qcow2 -cdrom $TMPDIR/seed.iso
           
