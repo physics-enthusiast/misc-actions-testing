@@ -42,6 +42,7 @@ jobs:
           additional-packages:
             mkisofs
             openssh-client
+            ca-certificates
             openssl
             aria2
       - name: Prepare common shell (Linux)
