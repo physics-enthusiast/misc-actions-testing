@@ -79,7 +79,7 @@ jobs:
         run: |
           {
             echo 'DEBIAN_JSON<<EOF'
-            cat $TMPDIR/debian.json
+            sed -e '$a\' $TMPDIR/debian.json
             echo EOF
           } >> "$GITHUB_OUTPUT"
         shell: wsl-bash {0}
