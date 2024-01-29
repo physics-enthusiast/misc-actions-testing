@@ -65,7 +65,7 @@ jobs:
           brew install dvdrtools
       - name: Fetch prebuilt Debian image
         run: |
-          aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -o $TMPDIR/debian.qcow2
+          aria2c https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2 -d $TMPDIR -o debian.qcow2
         env:
           TMPDIR: ${{ runner.temp }}
       - name: Generate SSH keys
