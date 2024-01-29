@@ -71,7 +71,7 @@ jobs:
           brew install dvdrtools
       - name: Fetch prebuilt Debian image manifest
         run: |
-          aria2c -d "$TMPDIR" -o debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.json 
+          aria2c --dir="$TMPDIR" --out=debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.json
         env:
           TMPDIR: ${{ runner.temp }}
       - name: Pass manifest to step context
@@ -96,7 +96,7 @@ jobs:
       - name: Fetch prebuilt Debian image
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
         run: |
-          aria2c -d "$TMPDIR" -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+          aria2c --dir="$TMPDIR" --out=debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
         env:
           TMPDIR: ${{ runner.temp }}
       - name: Save cache
@@ -141,9 +141,9 @@ jobs:
           import sys
           import pexpect
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso" 
-          child = pexpect.spawn(cmd, encoding='utf-8')
-          child.logfile = sys.stdout
-          child.expect('Started ssh\.service', timeout=None)
+          child = pexpect.spawn(cmd)
+          child.logfile = sys.stdout.buffer
+          child.expect('Started ssh.service', timeout=None)
           print("SSH started") 
         shell: python
         env:
