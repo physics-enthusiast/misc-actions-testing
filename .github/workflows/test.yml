@@ -97,7 +97,9 @@ jobs:
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
         run: |
           aria2c --dir="$TMPDIR" --out=debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+        shell: wsl-bash {0}
         env:
+          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
           TMPDIR: ${{ runner.temp }}
       - name: Save cache
         id: save-cache-image
@@ -143,7 +145,7 @@ jobs:
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso" 
           child = pexpect.spawn(cmd)
           child.logfile = sys.stdout.buffer
-          child.expect('Started ssh.service', timeout=None)
+          child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
           print("SSH started") 
         shell: python
         env:
