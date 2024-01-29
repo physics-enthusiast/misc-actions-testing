@@ -158,6 +158,7 @@ jobs:
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
           print("SSH started")
           child.sendline("debian")
+          child.sendline()
           import time
           time.sleep(20)
           c = Connection(
