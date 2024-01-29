@@ -148,7 +148,7 @@ jobs:
           import sys
           import pexpect
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -hda {os.environ['TMPDIR']}/debian.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso" 
-          child = pexpect.spawn(cmd)
+          child = pexpect.popen_spawn.PopenSpawn(cmd)
           child.logfile = sys.stdout.buffer
           child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
           print("SSH started") 
