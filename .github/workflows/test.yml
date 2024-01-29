@@ -158,7 +158,7 @@ jobs:
           c = Connection(
               host="127.0.0.1",
               user="debian",
-              port=2222,
+              port=60022,
               connect_kwargs={
                   "key_filename": "{os.environ['TMPDIR']}/sshkey",
               },
