@@ -69,9 +69,20 @@ jobs:
         run: |
           brew install qemu --force
           brew install dvdrtools
+      - name: Fetch prebuilt Debian image manifest
+        run: |
+          aria2c -d "$TMPDIR" -o debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.json
+        env:
+          TMPDIR: ${{ runner.temp }}
+      - name: Enable Cache
+        id: cache-action
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.temp }}/debian.qcow2
+          key: ${{fromJson(${{ runner.temp }}/debian.json).items[0].data.info.version}}
       - name: Fetch prebuilt Debian image
         run: |
-          aria2c -d '$TMPDIR' -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+          aria2c -d "$TMPDIR" -o debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
         env:
           TMPDIR: ${{ runner.temp }}
       - name: Generate SSH keys
