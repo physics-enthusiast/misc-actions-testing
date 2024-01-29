@@ -24,7 +24,7 @@ jobs:
         id: get_paths
         run: |
           import os
-          relpath = ${{ runner.temp }} or "./"
+          relpath = "${{ runner.temp }}" or "./"
           abspath = os.path.abspath(relpath)
           with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
               print(f'OUTDIR={abspath}', file=fh)
