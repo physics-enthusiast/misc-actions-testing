@@ -159,8 +159,8 @@ jobs:
           print("SSH started")
           child.sendline("debian")
           child.sendline()
-          import time
-          time.sleep(20)
+          import subprocess
+          subprocess.run("nmap localhost -p 60022")
           c = Connection(
               host="localhost",
               user="debian",
