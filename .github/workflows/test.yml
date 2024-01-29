@@ -159,7 +159,7 @@ jobs:
         id: action-ssh
         uses: tiyee/action-ssh@v1.0.1
         with:
-          host: localhost
+          host: 127.0.0.1
           port: 2222
           username: debian
           privateKey: ${{ steps.ssh_keygen.outputs.PRIVATE_KEY }} 
