@@ -105,7 +105,7 @@ jobs:
       - name: Generate SSH keys
         id: ssh_keygen
         run: |
-          ssh-keygen -b 2048 -t rsa -f $TMPDIR/sshkey -q -N ""
+          ssh-keygen -b 2048 -t dsa -f $TMPDIR/sshkey -q -N ""
           echo "PUBLIC_KEY=$(cat $TMPDIR/sshkey.pub)" >> $GITHUB_OUTPUT
           {
             echo 'PRIVATE_KEY<<EOF'
