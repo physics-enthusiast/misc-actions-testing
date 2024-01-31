@@ -114,6 +114,7 @@ jobs:
             echo EOF
           } >> "$GITHUB_OUTPUT"
           cat $TMPDIR/sshkey.pub
+          chmod 600 $TMPDIR/sshkey
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
