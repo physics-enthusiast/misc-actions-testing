@@ -147,7 +147,7 @@ jobs:
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp {os.cpu_count()} -nic user,id=vmnic,hostfwd=tcp:127.0.0.1:60022-:22 -hda {os.environ['TMPDIR']}/nixos.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso"
           child = popen_spawn.PopenSpawn(cmd)
           child.logfile = sys.stdout.buffer
-          child.expect('finish: modules-final', timeout=None)
+          child.expect('config-ssh ran successfully', timeout=None)
           print("SSH started")
           
           c = Connection(
