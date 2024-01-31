@@ -28,6 +28,7 @@ jobs:
           packages: |
             pexpect
             fabric
+            paramiko
       - name: Get paths
         id: get_paths
         run: |
@@ -105,7 +106,7 @@ jobs:
       - name: Generate SSH keys
         id: ssh_keygen
         run: |
-          ssh-keygen -b 1024 -t dsa -f $TMPDIR/sshkey -q -N ""
+          ssh-keygen -b 2048 -t rsa -f $TMPDIR/sshkey -q -N ""
           echo "PUBLIC_KEY=$(cat $TMPDIR/sshkey.pub)" >> $GITHUB_OUTPUT
           {
             echo 'PRIVATE_KEY<<EOF'
@@ -139,17 +140,22 @@ jobs:
           import sys
           from pexpect import popen_spawn
           from fabric import Connection
+          import paramiko
+          def get_key(key_path):
+              with open(key_path) as f:
+                  return paramiko.RSAKey.from_private_key(f)
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp {os.cpu_count()} -nic user,id=vmnic,hostfwd=tcp:127.0.0.1:60022-:22 -device virtio-scsi-pci,id=scsi0,num_queues=4 -device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0 -drive file={os.environ['TMPDIR']}/nixos.qcow2,if=none,id=drive0 -cdrom {os.environ['TMPDIR']}/seed.iso"
           child = popen_spawn.PopenSpawn(cmd)
           child.logfile = sys.stdout.buffer
           child.expect('finish: modules-final', timeout=None)
           print("SSH started")
+          
           c = Connection(
               host="localhost",
               user="ops",
               port=60022,
               connect_kwargs={
-                  "key_filename": f"{os.environ['TMPDIR']}/sshkey",
+                  "pkey": get_key(f"{os.environ['TMPDIR']}/sshkey"),
               },
           ).run('sh <(curl -L https://nixos.org/nix/install) --daemon')
         shell: python
