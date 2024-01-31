@@ -150,7 +150,8 @@ jobs:
           child.logfile = sys.stdout.buffer
           child.expect('config-ssh ran successfully', timeout=None)
           print("SSH started")
-          
+          import logging
+          logging.basicConfig(level=logging.DEBUG)
           c = Connection(
               host="localhost",
               user="ops",
