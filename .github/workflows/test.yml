@@ -123,9 +123,9 @@ jobs:
           cat <<EOF >> $TMPDIR/user-data
           #cloud-config
           users:
-            - name: "ops"
+            - name: ssh
               ssh_authorized_keys: 
-                - "${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}"
+                - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
@@ -152,7 +152,7 @@ jobs:
           
           c = Connection(
               host="localhost",
-              user="ops",
+              user="ssh",
               port=60022,
               connect_kwargs={
                   "pkey": get_key(f"{os.environ['TMPDIR']}/sshkey"),
@@ -167,7 +167,7 @@ jobs:
         with:
           host: 127.0.0.1
           port: 2222
-          username: ops
+          username: ssh
           privateKey: ${{ steps.ssh_keygen.outputs.PRIVATE_KEY }} 
           command: |
             sh <(curl -L https://nixos.org/nix/install) --daemon
