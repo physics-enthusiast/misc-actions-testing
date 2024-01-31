@@ -127,6 +127,7 @@ jobs:
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
+          cloud-init schema --config-file $TMPDIR/user-data
           mkisofs -output $TMPDIR/seed.iso -volid cidata -joliet -rock $TMPDIR/user-data $TMPDIR/meta-data
         shell: wsl-bash {0}
         env:
