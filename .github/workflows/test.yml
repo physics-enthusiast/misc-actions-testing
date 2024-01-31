@@ -75,14 +75,12 @@ jobs:
         run: |
           brew install qemu --force
           brew install dvdrtools
-      - name: Fetch prebuilt Debian image
-        if: steps.restore-cache-image.outputs.cache-hit != 'true' 
-        run: |
-          sudo aria2c --dir="$TMPDIR" --out=nixos.qcow2 https://github.com/physics-enthusiast/nixos-image/releases/download/${{ steps.read_manifest.outputs.tag_name }}/nixos.qcow2
-        shell: wsl-bash {0}
-        env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
+      - name: Fetch prebuilt NixOS image manifest
+        id: read_manifest
+        uses: cityoflosangeles/fetch-latest-github-release@v2.0.3
+        with:
+          github_token: ${{ github.token }}
+          repo_path: "physics-enthusiast/nixos-image"
       - name: Restore cache
         id: restore-cache-image
         uses: actions/cache/restore@v4
@@ -91,12 +89,12 @@ jobs:
           key: ${{ steps.read_manifest.outputs.tag_name }}
       - name: Fetch prebuilt NixOS image
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
-        uses: robinraju/release-downloader@v1.9
-        with: 
-          repository: "physics-enthusiast/nixos-image"
-          tag: ${{ steps.read_manifest.outputs.tag_name }}
-          fileName: "nixos.qcow2"
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sudo aria2c --dir="$TMPDIR" --out=nixos.qcow2 https://github.com/physics-enthusiast/nixos-image/releases/download/${{ steps.read_manifest.outputs.tag_name }}/nixos.qcow2
+        shell: wsl-bash {0}
+        env:
+          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
+          TMPDIR: ${{ runner.temp }}
       - name: Save cache
         id: save-cache-image
         uses: actions/cache/save@v4
