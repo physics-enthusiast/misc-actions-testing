@@ -122,10 +122,8 @@ jobs:
         run: |
           cat <<EOF >> $TMPDIR/user-data
           #cloud-config
-          users:
-            - name: ssh
-              ssh_authorized_keys: 
-                - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
+          ssh_authorized_keys: 
+            - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
