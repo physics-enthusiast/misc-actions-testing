@@ -44,9 +44,6 @@ jobs:
           additional-packages:
             mkisofs
             openssh-client
-            ca-certificates
-            openssl
-            aria2
       - name: Prepare common shell (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -74,47 +71,33 @@ jobs:
         run: |
           brew install qemu --force
           brew install dvdrtools
-      - name: Fetch prebuilt Debian image manifest
-        run: |
-          sudo aria2c --dir="$TMPDIR" --out=debian.json https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.json
-        shell: wsl-bash {0}
-        env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
-      - name: Pass manifest to step context
+      - name: Fetch prebuilt NixOS image manifest
         id: read_manifest
-        run: |
-          {
-            echo 'DEBIAN_JSON<<EOF'
-            cat $TMPDIR/debian.json
-            echo -e '\n'
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
-        shell: wsl-bash {0}
-        env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
+        uses: cityoflosangeles/fetch-latest-github-release@v2.0.3
+        with:
+          github_token: ${{ github.token }}
+          repo_path: "physics-enthusiast/nixos-image"
       - name: Restore cache
         id: restore-cache-image
         uses: actions/cache/restore@v4
         with:
-          path: ${{ runner.temp }}/debian.qcow2
-          key: ${{ fromJson(steps.read_manifest.outputs.DEBIAN_JSON).items[0].data.info.version }}
-      - name: Fetch prebuilt Debian image
+          path: ${{ runner.temp }}/nixos.qcow2
+          key: ${{ steps.read_manifest.outputs.tag_name }}
+      - name: Fetch prebuilt NixOS image
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
-        run: |
-          sudo aria2c --dir="$TMPDIR" --out=debian.qcow2 https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
-        shell: wsl-bash {0}
-        env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
+        uses: robinraju/release-downloader@v1.9
+        with: 
+          repository: "physics-enthusiast/nixos-image"
+          tag: ${{ steps.read_manifest.outputs.tag_name }}
+          fileName: "nixos.qcow2"
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Save cache
         id: save-cache-image
         uses: actions/cache/save@v4
         if: steps.restore-cache-image.outputs.cache-hit != 'true'
         with:
-          path: ${{ runner.temp }}/debian.qcow2
-          key: ${{ fromJson(steps.read_manifest.outputs.DEBIAN_JSON).items[0].data.info.version }}
+          path: ${{ runner.temp }}/nixos.qcow2
+          key: ${{ steps.read_manifest.outputs.tag_name }}
       - name: Generate SSH keys
         id: ssh_keygen
         run: |
@@ -152,18 +135,14 @@ jobs:
           import sys
           from pexpect import popen_spawn
           from fabric import Connection
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp {os.cpu_count()} -nic user,id=vmnic,hostfwd=tcp:127.0.0.1:60022-:22 -device virtio-scsi-pci,id=scsi0,num_queues=4 -device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0 -drive file={os.environ['TMPDIR']}/debian.qcow2,if=none,id=drive0 -cdrom {os.environ['TMPDIR']}/seed.iso"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp {os.cpu_count()} -nic user,id=vmnic,hostfwd=tcp:127.0.0.1:60022-:22 -device virtio-scsi-pci,id=scsi0,num_queues=4 -device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0 -drive file={os.environ['TMPDIR']}/nixos.qcow2,if=none,id=drive0 -cdrom {os.environ['TMPDIR']}/seed.iso"
           child = popen_spawn.PopenSpawn(cmd)
           child.logfile = sys.stdout.buffer
-          child.expect('Debian GNU/Linux 12 localhost ttyS0', timeout=None)
+          child.expect('finish: modules-final', timeout=None)
           print("SSH started")
-          child.sendline("debian")
-          child.sendline()
-          import subprocess
-          subprocess.run("nmap localhost -p 60022")
           c = Connection(
               host="localhost",
-              user="debian",
+              user="ops",
               port=60022,
               connect_kwargs={
                   "key_filename": f"{os.environ['TMPDIR']}/sshkey",
@@ -178,7 +157,7 @@ jobs:
         with:
           host: 127.0.0.1
           port: 2222
-          username: debian
+          username: ops
           privateKey: ${{ steps.ssh_keygen.outputs.PRIVATE_KEY }} 
           command: |
             sh <(curl -L https://nixos.org/nix/install) --daemon
