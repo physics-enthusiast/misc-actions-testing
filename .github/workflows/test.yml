@@ -125,7 +125,7 @@ jobs:
           #cloud-config
           system_info:
             default_user:
-              ssh_authorized_keys: 
+              ssh_authorized_keys
                 - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
           EOF
           cat $TMPDIR/user-data
