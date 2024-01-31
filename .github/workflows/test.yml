@@ -123,7 +123,7 @@ jobs:
           cat <<EOF >> $TMPDIR/user-data
           #cloud-config
           users:
-            - name: ops
+            - name: "ops"
               ssh_authorized_keys: 
                 - "${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}"
           EOF
