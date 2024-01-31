@@ -126,7 +126,7 @@ jobs:
           system_info:
             default_user:
               ssh_authorized_keys:
-                - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
+                - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCw33f+m7t2XpxpGxJJftyUdDTzoBP0H455v+dYdfIt5W9naeCuT8uwdYawXI7a3nIb0AYx7Q6GMBdai2J4QZcx3Ne7nB+hNjFRDvb1ZzDanInEI/N6pc++2K844Bv2a2MV/Mjv0XULvBg+j8KMwREYpJm8owmyu0GBisQrl7AvUVe8gaNejwXEuCvjkfT9V9Fcvi0iRRo23NrhWzGfj4nMplDds1C2NziHaib2wZWX79Ix6O0w3mpBz3h289md/kRb75H7I9og7ISMYteIegH6bYI54cG4/JCXKQ2TGHOQX2ZUDKzmtLAR+FfeWPmr5c/PE+4rBayYbuPONKRC6CaR 
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
