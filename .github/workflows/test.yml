@@ -126,6 +126,8 @@ jobs:
           #cloud-config
           ssh_authorized_keys:
             - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
+          runcmd:
+            - "sudo service sshd status"
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
@@ -157,13 +159,7 @@ jobs:
                   "pkey": get_key(f"{os.environ['TMPDIR']}/sshkey"),
               },
           )
-          import time
-          while True:
-              try:
-                  c.run('sh <(curl -L https://nixos.org/nix/install) --daemon')
-                  time.sleep(10)
-              except:
-                  pass
+          c.run('sh <(curl -L https://nixos.org/nix/install) --daemon')
         shell: python
         env:
           TMPDIR: ${{ runner.temp }}
