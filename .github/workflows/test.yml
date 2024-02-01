@@ -127,7 +127,7 @@ jobs:
           ssh_authorized_keys:
             - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
           runcmd:
-            - "echo $(sudo service sshd status)"
+            - 'echo $(sudo service sshd status)'
           EOF
           cat $TMPDIR/user-data
           touch $TMPDIR/meta-data
