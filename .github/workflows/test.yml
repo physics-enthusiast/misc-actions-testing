@@ -124,8 +124,11 @@ jobs:
         run: |
           cat <<EOF >> $TMPDIR/user-data
           #cloud-config
-          ssh_authorized_keys:
-            - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
+          users:
+            - name: nixos
+              shell: /bin/bash
+              ssh_authorized_keys:
+                - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
           runcmd:
             - 'echo $(sudo service sshd status)'
           EOF
@@ -153,7 +156,7 @@ jobs:
           print("SSH started")
           c = Connection(
               host="localhost",
-              user="ops",
+              user="nixos",
               port=60022,
               connect_kwargs={
                   "pkey": get_key(f"{os.environ['TMPDIR']}/sshkey"),
