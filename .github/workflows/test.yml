@@ -111,7 +111,7 @@ jobs:
               qmp = QMPClient()
               await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
               res = await qmp.execute('guest-ping')
-              print(f"VM status: {res['status']}")
+              print(f"VM status: {res}")
           asyncio.run(main())
         shell: python
         env:
