@@ -104,11 +104,12 @@ jobs:
           import sys
           import asyncio
           from qemu.qmp import QMPClient
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,path=qga.sock,server=on,wait=off,id=qga0 -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,path={os.environ['TMPDIR']}/qga.sock,server=on,wait=off,id=qga0 -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd)
+              await asyncio.sleep(10)
               qmp = QMPClient()
-              await qmp.connect(f"qga.sock")
+              await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
               res = await qmp.execute('query-status')
               print(f"VM status: {res['status']}")
           asyncio.run(main())
