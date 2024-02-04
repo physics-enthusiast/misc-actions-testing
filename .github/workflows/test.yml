@@ -109,8 +109,8 @@ jobs:
               proc = await asyncio.create_subprocess_shell(cmd)
               await asyncio.sleep(10)
               qmp = QMPClient()
-              qmp.await_greeting = false
-              qmp.negotiate = false
+              qmp.await_greeting = False
+              qmp.negotiate = False
               await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
               res = await qmp.execute('guest-ping')
               print(f"VM status: {res}")
