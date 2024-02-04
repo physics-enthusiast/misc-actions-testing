@@ -111,6 +111,8 @@ jobs:
               while True:
                   try:
                       await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
+                  except:
+                      pass
               res = await qmp.execute('query-status')
               print(f"VM status: {res['status']}")
           asyncio.run(main())
