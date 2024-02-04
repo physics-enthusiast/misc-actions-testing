@@ -108,7 +108,9 @@ jobs:
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd)
               qmp = QMPClient()
-              await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
+              while True:
+                  try:
+                      await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
               res = await qmp.execute('query-status')
               print(f"VM status: {res['status']}")
           asyncio.run(main())
