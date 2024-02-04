@@ -26,9 +26,7 @@ jobs:
       - uses: insightsengineering/pip-action@v2
         with:
           packages: |
-            pexpect
-            fabric
-            paramiko
+            qemu.qmp==0.0.3
       - name: Get paths
         id: get_paths
         run: |
@@ -43,8 +41,6 @@ jobs:
         uses: Vampire/setup-wsl@v2
         with:
           additional-packages:
-            mkisofs
-            openssh-client
             ca-certificates
             openssl
             aria2
@@ -70,12 +66,11 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get -y install qemu-system mkisofs nmap
+          sudo apt-get -y install qemu-system
       - name: Install dependencies (Darwin)
         if: runner.os == 'macOS'
         run: |
           brew install qemu --force
-          brew install dvdrtools
       - name: Fetch prebuilt NixOS image manifest
         id: read_manifest
         uses: cityoflosangeles/fetch-latest-github-release@v2.0.3
@@ -103,78 +98,22 @@ jobs:
         with:
           path: ${{ runner.temp }}/nixos.qcow2
           key: ${{ steps.read_manifest.outputs.tag_name }}
-      - name: Generate SSH keys
-        id: ssh_keygen
-        run: |
-          ssh-keygen -b 2048 -t rsa -f $TMPDIR/sshkey -q -N ""
-          pkey=$(echo $(cat $TMPDIR/sshkey.pub))
-          echo "PUBLIC_KEY=$pkey" >> $GITHUB_OUTPUT
-          {
-            echo 'PRIVATE_KEY<<EOF'
-            cat $TMPDIR/sshkey
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
-          cat $TMPDIR/sshkey.pub
-          chmod 600 $TMPDIR/sshkey
-        shell: wsl-bash {0}
-        env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
-      - name: Prepare cloud-init data
-        run: |
-          cat <<EOF >> $TMPDIR/user-data
-          #cloud-config
-          users:
-            - name: nixos
-              shell: /bin/bash
-              ssh_authorized_keys:
-                - ${{ steps.ssh_keygen.outputs.PUBLIC_KEY }}
-          runcmd:
-            - 'echo $(sudo service sshd status)'
-          EOF
-          cat $TMPDIR/user-data
-          touch $TMPDIR/meta-data
-          mkisofs -output $TMPDIR/seed.iso -volid cidata -joliet -rock $TMPDIR/user-data $TMPDIR/meta-data
-        shell: wsl-bash {0}
-        env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
       - name: Start VM
         run: |
           import os
           import sys
-          from pexpect import popen_spawn
-          from fabric import Connection
-          import paramiko
-          def get_key(key_path):
-              with open(key_path) as f:
-                  return paramiko.RSAKey.from_private_key(f)
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -smp {os.cpu_count()} -nic user,id=vmnic,hostfwd=tcp:127.0.0.1:60022-:22 -hda {os.environ['TMPDIR']}/nixos.qcow2 -cdrom {os.environ['TMPDIR']}/seed.iso"
-          child = popen_spawn.PopenSpawn(cmd)
-          child.logfile = sys.stdout.buffer
-          child.expect('finish: modules-final', timeout=None)
-          print("SSH started")
-          c = Connection(
-              host="localhost",
-              user="nixos",
-              port=60022,
-              connect_kwargs={
-                  "pkey": get_key(f"{os.environ['TMPDIR']}/sshkey"),
-              },
-          )
-          c.run('sh <(curl -L https://nixos.org/nix/install) --daemon')
+          import asyncio
+          from qemu.qmp import QMPClient
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,path={os.environ['TMPDIR']}/qga.sock,server,nowait,id=qga0 -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
+          proc = await asyncio.create_subprocess_shell(cmd)
+          async def main():
+              qmp = QMPClient()
+              await qmp.connect(f"{os.environ['TMPDIR']}/qga.sock")
+              res = await qmp.execute('query-status')
+              print(f"VM status: {res['status']}")
+          asyncio.run(main())
         shell: python
         env:
           TMPDIR: ${{ runner.temp }}
-      - name: Install Nix
-        id: action-ssh
-        uses: tiyee/action-ssh@v1.0.1
-        with:
-          host: 127.0.0.1
-          port: 2222
-          username: ops
-          privateKey: ${{ steps.ssh_keygen.outputs.PRIVATE_KEY }} 
-          command: |
-            sh <(curl -L https://nixos.org/nix/install) --daemon
 
           
