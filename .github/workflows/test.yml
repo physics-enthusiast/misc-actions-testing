@@ -103,6 +103,7 @@ jobs:
           import os
           import sys
           import asyncio
+          import socket
           from qemu.qmp import QMPClient
           cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
           async def main():
@@ -110,8 +111,14 @@ jobs:
               qmp = QMPClient()
               qmp.await_greeting = False
               qmp.negotiate = False
-              await asyncio.sleep(10)
-              await qmp.connect(('127.0.0.1', 9876))
+              while True:
+                  try:
+                      qga_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                      qga_sock.connect(('localhost', 9876))
+                      break
+                  except socket.error:
+                      await asyncio.sleep(1) 
+              await qmp.connect(qga_sock)
               res = await qmp.execute('guest-ping')
               print(f"VM status: {res}")
           asyncio.run(main())
