@@ -72,8 +72,8 @@ jobs:
           git config --global http.postBuffer 157286400
           git clone https://github.com/patchew-project/qemu.git && \
           cd qemu && \
-          git fetch https://github.com/patchew-project/qemu tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
-          git checkout stable-8.0 && \
+          git fetch --tags https://github.com/patchew-project/qemu tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
+          git checkout tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
           ./configure --enable-sdl --enable-gtk && \
           make && \
           make install
