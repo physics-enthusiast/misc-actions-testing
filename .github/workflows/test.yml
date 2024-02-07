@@ -60,22 +60,13 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          function Execute-MSYS {
-          
-              param (
-                  $cmdstr
-              )
-              Start-Process -Wait -NoNewWindow -FilePath C:\msys64\msys2_shell.cmd -ArgumentList $cmdstr
-          } 
-          Execute-MSYS -cmdstr 'pacman -Syu --noconfirm'
-          Execute-MSYS -cmdstr 'pacman -Su --noconfirm'
-          Execute-MSYS -cmdstr 'pacman -S base-devel mingw-w64-ucrt-x86_64-toolchain git python ninja --noconfirm'
-          Execute-MSYS -cmdstr 'pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm'
-          Execute-MSYS -cmdstr 'pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm'
-          Execute-MSYS -cmdstr 'pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm'
- 
-          Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
-          echo "C:\\Windows\\System32\\bash.exe" >> $GITHUB_PATH
+          pacman -Syu --noconfirm
+          pacman -Su --noconfirm
+          pacman -S base-devel mingw-w64-ucrt-x86_64-toolchain git python ninja --noconfirm
+          pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm
+          pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm
+          pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm
+        shell: bash
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
