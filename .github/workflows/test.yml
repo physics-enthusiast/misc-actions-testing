@@ -60,7 +60,7 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          function msys2 {C:\msys64\usr\bin\bash.exe -l -c $args[0]} 
+          function msys2 {C:\msys64\msys2_shell.cmd -defterm -no-start -mingw64 -here -c $args[0]} 
           msys2 @'
           pacman -Syu --noconfirm && \
           pacman -Su --noconfirm && \
