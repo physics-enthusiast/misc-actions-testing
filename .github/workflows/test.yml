@@ -65,7 +65,7 @@ jobs:
               param (
                   $cmdstr
               )
-              Start-Process-Wait -NoNewWindow -FilePath C:\msys64\msys2_shell.cmd -ArgumentList $cmdList
+              Start-Process -Wait -NoNewWindow -FilePath C:\msys64\msys2_shell.cmd -ArgumentList $cmdList
           } 
           Execute-MSYS -cmdstr 'pacman -Syu'
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
