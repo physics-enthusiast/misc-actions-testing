@@ -64,10 +64,9 @@ jobs:
           msys2 @'
           pacman -Syu --noconfirm && \
           pacman -Su --noconfirm && \
-          pacman -S base-devel mingw-w64-ucrt-x86_64-toolchain git python ninja --noconfirm && \
-          pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm && \
-          pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm && \
-          pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm && \
+          pacman -S base-devel mingw-w64-x86_64-toolchain git python ninja --noconfirm && \
+          pacman -S mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools --noconfirm && \
+          pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp --noconfirm && \
           git clone https://gitlab.com/qemu-project/qemu.git && \
           cd qemu && \
           git checkout stable-8.0 && \
