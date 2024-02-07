@@ -60,7 +60,7 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          function msys2 {C:\\msys64\\usr\\bin\\env MSYSTEM=MSYS /usr/bin/bash -lc $args[0]} 
+          function msys2 {C:\\msys64\\usr\\bin\\env MSYSTEM=MINGW64 /usr/bin/bash -lc $args[0]} 
           msys2 @'
           pacman -Syu --noconfirm && \
           pacman -Su --noconfirm && \
