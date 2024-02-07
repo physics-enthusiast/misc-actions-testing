@@ -74,8 +74,8 @@ jobs:
           cd qemu && \
           git fetch --tags https://github.com/patchew-project/qemu tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
           git checkout tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
-          curl https://gitlab.com/qemu-project/qemu/-/commit/d66ba6dc1cce914673bd8a89fca30a7715ea70d1.diff | git apply && \
-          curl https://gitlab.com/qemu-project/qemu/-/commit/5cb993ff131fca2abef3ce074a20258fd6fce557.diff | git apply && \
+          curl https://gitlab.com/qemu-project/qemu/-/commit/d66ba6dc1cce914673bd8a89fca30a7715ea70d1.diff | git apply --ignore-whitespace --reject && \
+          curl https://gitlab.com/qemu-project/qemu/-/commit/5cb993ff131fca2abef3ce074a20258fd6fce557.diff | git apply --ignore-whitespace --reject && \
           ./configure --enable-sdl --enable-gtk --disable-werror && \
           make && \
           make install
