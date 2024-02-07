@@ -44,6 +44,7 @@ jobs:
             ca-certificates
             openssl
             aria2
+            p7zip-full
       - name: Prepare common shell (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -114,7 +115,7 @@ jobs:
           import asyncio
           import socket
           from qemu.qmp import QMPClient
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=passthrough,id=fsdev0,path={os.environ['TMPDIR']}/extraction -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd)
               qmp = QMPClient()
