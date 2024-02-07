@@ -74,7 +74,7 @@ jobs:
           cd qemu && \
           git fetch --tags https://github.com/patchew-project/qemu tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
           git checkout tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
-          ./configure --enable-sdl --enable-gtk --disable-error && \
+          ./configure --enable-sdl --enable-gtk --disable-werror && \
           make && \
           make install
           '@
