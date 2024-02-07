@@ -102,7 +102,7 @@ jobs:
         run: |
           mkdir $TMPDIR/extraction
           7z e $TMPDIR/nixos-qcow.7z -o"$TMPDIR/extraction"
-          mv $TMPDIR/extraction/* $TMPDIR/extraction/nixos.qcow2
+          mv $TMPDIR/extraction/* $TMPDIR/nixos.qcow2
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
