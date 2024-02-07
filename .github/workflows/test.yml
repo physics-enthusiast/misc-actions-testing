@@ -69,6 +69,7 @@ jobs:
           pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm && \
           pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm && \
           git clone https://gitlab.com/qemu-project/qemu.git && \
+          cd qemu && \
           git checkout stable-8.0 && \
           ./configure --enable-gtk --enable-sdl --target-list=x86_64-softmmu --disable-capstone --prefix=$(pwd)/install_dir
           '@
