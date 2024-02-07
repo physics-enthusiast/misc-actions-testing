@@ -71,6 +71,8 @@ jobs:
           git config --global http.version HTTP/1.1
           git config --global http.postBuffer 157286400
           git clone https://github.com/patchew-project/qemu.git && \
+          sudo aria2c --dir="$TMPDIR" https://gitlab.com/qemu-project/qemu/-/commit/d66ba6dc1cce914673bd8a89fca30a7715ea70d1.patch && \
+          sudo aria2c --dir="$TMPDIR" https://gitlab.com/qemu-project/qemu/-/commit/5cb993ff131fca2abef3ce074a20258fd6fce557.patch && \
           cd qemu && \
           git fetch --tags https://github.com/patchew-project/qemu tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
           git checkout tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
