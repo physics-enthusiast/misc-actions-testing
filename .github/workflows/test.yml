@@ -60,7 +60,8 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          choco install qemu
+          msys2
+          pacman -Syu
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
           echo "C:\\Windows\\System32\\bash.exe" >> $GITHUB_PATH
       - name: Install dependencies (Linux)
