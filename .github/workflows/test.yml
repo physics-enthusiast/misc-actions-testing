@@ -61,15 +61,17 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           function msys2 {C:\msys64\usr\bin\bash.exe -l -c $args[0]} 
-          msys2 'pacman -Syu --noconfirm' 
-          msys2 'pacman -Su --noconfirm'
-          msys2 'pacman -S base-devel mingw-w64-ucrt-x86_64-toolchain git python ninja --noconfirm'
-          msys2 'pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm'
-          msys2 'pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm'
-          msys2 'pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm'
-          msys2 'git clone https://gitlab.com/qemu-project/qemu.git'
-          msys2 'git checkout stable-8.0' 
-          msys2 './configure --enable-gtk --enable-sdl --target-list=x86_64-softmmu --disable-capstone --prefix=$(pwd)/install_dir'
+          msys2 @'
+          pacman -Syu --noconfirm && \
+          pacman -Su --noconfirm && \
+          pacman -S base-devel mingw-w64-ucrt-x86_64-toolchain git python ninja --noconfirm && \
+          pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm && \
+          pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm && \
+          pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm && \
+          git clone https://gitlab.com/qemu-project/qemu.git && \
+          git checkout stable-8.0 && \
+          ./configure --enable-gtk --enable-sdl --target-list=x86_64-softmmu --disable-capstone --prefix=$(pwd)/install_dir
+          '@
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
