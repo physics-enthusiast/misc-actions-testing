@@ -60,8 +60,14 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          msys2
-          pacman -Syu
+          function Execute-MSYS {
+          
+              param (
+                  $cmdstr
+              )
+              Start-Process-Wait -NoNewWindow -FilePath C:\msys64\msys2_shell.cmd -ArgumentList $cmdList
+          } 
+          Execute-MSYS -cmdstr 'pacman -Syu'
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
           echo "C:\\Windows\\System32\\bash.exe" >> $GITHUB_PATH
       - name: Install dependencies (Linux)
