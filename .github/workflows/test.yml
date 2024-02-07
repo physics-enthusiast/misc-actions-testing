@@ -68,10 +68,12 @@ jobs:
           gcc --version && \
           pacman -S mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools --noconfirm && \
           pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp --noconfirm && \
-          git clone https://gitlab.com/qemu-project/qemu.git && \
+          git clone https://github.com/patchew-project/qemu/tree/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
           cd qemu && \
           git checkout stable-8.0 && \
-          ./configure --enable-sdl --enable-gtk
+          ./configure --enable-sdl --enable-gtk && \
+          make && \
+          make install
           '@
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
