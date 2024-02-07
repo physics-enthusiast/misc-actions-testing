@@ -60,7 +60,7 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          msys2 -c 'pacman -Syu --noconfirm' 
+          C:\msys64\usr\bin\bash.exe -c 'pacman -Syu --noconfirm' 
           pacman -Su --noconfirm
           pacman -S base-devel mingw-w64-ucrt-x86_64-toolchain git python ninja --noconfirm
           pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm
