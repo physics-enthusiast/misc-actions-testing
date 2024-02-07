@@ -67,6 +67,9 @@ jobs:
           msys2 'pacman -S mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-pixman python-setuptools --noconfirm'
           msys2 'pacman -S mingw-w64-ucrt-x86_64-gtk3 mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libslirp --noconfirm'
           msys2 'pacman -S mingw-w64-ucrt-x86_64-meson --noconfirm'
+          msys2 'git clone https://gitlab.com/qemu-project/qemu.git'
+          msys2 'git checkout stable-8.0' 
+          msys2 './configure --enable-gtk --enable-sdl --target-list=x86_64-softmmu --disable-capstone --prefix=$(pwd)/install_dir'
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
