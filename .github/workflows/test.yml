@@ -81,12 +81,12 @@ jobs:
         id: restore-cache-image
         uses: actions/cache/restore@v4
         with:
-          path: ${{ runner.temp }}/nixos.qcow2
+          path: ${{ runner.temp }}/nixos-qcow.7z
           key: ${{ steps.read_manifest.outputs.tag_name }}
       - name: Fetch prebuilt NixOS image
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
         run: |
-          sudo aria2c --dir="$TMPDIR" --out=nixos.qcow2 https://github.com/physics-enthusiast/nixos-image/releases/download/${{ steps.read_manifest.outputs.tag_name }}/nixos.qcow2
+          sudo aria2c --dir="$TMPDIR" https://github.com/physics-enthusiast/nixos-image/releases/download/${{ steps.read_manifest.outputs.tag_name }}/nixos-qcow.7z
         shell: wsl-bash {0}
         env:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
@@ -96,8 +96,17 @@ jobs:
         uses: actions/cache/save@v4
         if: steps.restore-cache-image.outputs.cache-hit != 'true'
         with:
-          path: ${{ runner.temp }}/nixos.qcow2
+          path: ${{ runner.temp }}/nixos-qcow.7z
           key: ${{ steps.read_manifest.outputs.tag_name }}
+      - name: Extract image
+        run: |
+          mkdir $TMPDIR/extraction
+          7z e $TMPDIR/nixos-qcow.7z -o"$TMPDIR/extraction"
+          mv $TMPDIR/extraction/* $TMPDIR/extraction/nixos.qcow2
+        shell: wsl-bash {0}
+        env:
+          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
+          TMPDIR: ${{ runner.temp }}
       - name: Start VM
         run: |
           import os
