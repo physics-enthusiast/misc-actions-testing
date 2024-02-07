@@ -71,6 +71,7 @@ jobs:
           git clone https://gitlab.com/qemu-project/qemu.git && \
           cd qemu && \
           git checkout stable-8.0 && \
+          export CC=gcc && \
           ./configure --enable-gtk --enable-sdl --target-list=x86_64-softmmu --disable-capstone --prefix=$(pwd)/install_dir
           '@
       - name: Install dependencies (Linux)
