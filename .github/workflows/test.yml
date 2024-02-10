@@ -110,6 +110,7 @@ jobs:
           TMPDIR: ${{ runner.temp }}
       - run: |
           qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio
+        shell: cmd
       - name: Start VM
         run: |
           import os
