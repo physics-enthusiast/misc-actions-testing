@@ -60,8 +60,8 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          aria2c --dir="$TMPDIR" https://github.com/physics-enthusiast/qemu-patched-compile/releases/download/untagged-86a3f18ed4efd21fe8cd/qemu-setup.exe
-          $TMPDIR/qemu-setup.exe
+          aria2c --dir="$TMPDIR" https://github.com/physics-enthusiast/qemu-patched-compile/releases/latest/download/qemu-setup.exe
+          ${{ runner.temp }}/qemu-setup.exe
         shell: cmd
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
