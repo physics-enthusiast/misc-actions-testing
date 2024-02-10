@@ -109,7 +109,7 @@ jobs:
           WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
           TMPDIR: ${{ runner.temp }}
       - run: |
-          qemu-system-x86_64 -nographic -m 4096 -serial mon:stdio -nic user -hda ${{ runner.temp }}/nixos.qcow2
+          qemu-system-x86_64
       - name: Start VM
         run: |
           import os
