@@ -60,25 +60,9 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          function msys2 {C:\\msys64\\usr\\bin\\env MSYSTEM=MINGW64 /usr/bin/bash -lc $args[0]} 
-          msys2 @'
-          pacman -Syu --noconfirm && \
-          pacman -Su --noconfirm && \
-          pacman -S base-devel mingw-w64-x86_64-toolchain git python ninja --noconfirm && \
-          gcc --version && \
-          pacman -S mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools --noconfirm && \
-          pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp --noconfirm && \
-          git config --global http.version HTTP/1.1
-          git config --global http.postBuffer 157286400
-          git clone https://github.com/patchew-project/qemu.git && \
-          cd qemu && \
-          git fetch --tags https://github.com/patchew-project/qemu tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
-          git checkout tags/patchew/20230220100815.1624266-1-bin.meng@windriver.com && \
-          curl https://gitlab.com/qemu-project/qemu/-/commit/5cb993ff131fca2abef3ce074a20258fd6fce557.patch | git apply --ignore-whitespace --reject && \
-          ./configure --enable-sdl --enable-gtk --disable-werror && \
-          make && \
-          make install
-          '@
+          aria2c --dir="$TMPDIR" https://github.com/physics-enthusiast/qemu-patched-compile/releases/download/untagged-86a3f18ed4efd21fe8cd/qemu-setup.exe
+          $TMPDIR/qemu-setup.exe
+        shell: cmd
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
