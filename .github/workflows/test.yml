@@ -60,7 +60,7 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          aria2c --dir="${{ runner.temp }}" https://github.com/physics-enthusiast/qemu-patched-compile/releases/latest/download/qemu-setup.exe
+          aria2c --dir="${{ runner.temp }}" https://github.com/physics-enthusiast/qemu-patched-compile/releases/download/qemu-test/qemu-setup.exe
           Start-Process -FilePath '${{ runner.temp }}/qemu-setup.exe' -ArgumentList '/S /D=C:\Program Files\qemu' -NoNewWindow -Wait -PassThru -RedirectStandardOutput output.txt -RedirectStandardError error.txt
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
       - name: Install dependencies (Linux)
