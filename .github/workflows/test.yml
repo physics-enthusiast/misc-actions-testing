@@ -152,7 +152,8 @@ jobs:
                       except:
                           await asyncio.sleep(1)
                   return res
-              await run_force("systemctl")
+              await res = run_force("systemctl")
+              print(res)
               await run("systemctl is-system-running --wait")
               await run("uname -r")
           asyncio.run(main())
