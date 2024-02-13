@@ -153,6 +153,8 @@ jobs:
                           await asyncio.sleep(1)
                   return res
               await run_force("systemctl")
+              await run("systemctl is-system-running --wait")
+              await run("uname -r")
           asyncio.run(main())
         shell: python
         env:
