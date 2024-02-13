@@ -144,8 +144,7 @@ jobs:
                       print(base64.b64decode(res['out-data']).decode('utf-8'))
                   else:
                       raise CommandError(base64.b64decode(res['err-data']).decode('utf-8'))
-              await asyncio.sleep(20) 
-              await run("systemctl")
+              await run("type systemctl")
           asyncio.run(main())
         shell: python
         env:
