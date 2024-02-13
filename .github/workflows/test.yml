@@ -134,28 +134,30 @@ jobs:
                       await asyncio.sleep(1) 
               await qmp.connect(qga_sock)
               res = await qmp.execute('guest-ping')
-              async def run(cmd):
+              async def run(cmd, print_output=False):
                   pid = await qmp.execute('guest-exec',{'path':'/nix/var/nix/profiles/system/sw/bin/bash','arg':['-c',f'"{cmd}"'],'capture-output':'separated'})
                   res = await qmp.execute('guest-exec-status',pid)
                   while not res['exited']:
                       await asyncio.sleep(1)
                       res = await qmp.execute('guest-exec-status',pid)
                   if res['exitcode'] == 0:
-                      return base64.b64decode(res['out-data']).decode('utf-8')
+                      output = base64.b64decode(res['out-data']).decode('utf-8')
+                      if print_output:
+                          print(output)
+                      return output
                   else:
-                      raise CommandError(base64.b64decode(res['err-data']).decode('utf-8'))
-              async def run_force(cmd):
+                      output = base64.b64decode(res['err-data']).decode('utf-8')
+                      raise CommandError(output)
+              async def run_force(cmd, print_output=False):
                   while True:
                       try:
-                          res = await run(cmd)
+                          await run(cmd, print_output)
                           break
                       except:
                           await asyncio.sleep(1)
                   return res
-              res = await run_force("systemctl")
-              print(res)
-              await run("systemctl is-system-running --wait")
-              await run("uname -r")
+              res = await run_force("systemctl is-system-running --wait", print_output=True)
+              res = await run("uname -r", print_output=True)
           asyncio.run(main())
         shell: python
         env:
