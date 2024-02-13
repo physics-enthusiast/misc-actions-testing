@@ -147,7 +147,7 @@ jobs:
               async def run_force(cmd):
                   while True:
                       try:
-                          res = run(cmd)
+                          res = await run(cmd)
                           break
                       except:
                           await asyncio.sleep(1)
