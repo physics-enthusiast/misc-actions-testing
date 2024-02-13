@@ -143,7 +143,7 @@ jobs:
                   if res['exitcode'] == 0:
                       print(base64.b64decode(res['out-data']).decode('utf-8'))
                   else:
-                      raise CommandError(base64.b64decode(res['exit-data']).decode('utf-8'))
+                      raise CommandError(base64.b64decode(res['err-data']).decode('utf-8'))
               await run("uname -r")
           asyncio.run(main())
         shell: python
