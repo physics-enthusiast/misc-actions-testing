@@ -141,10 +141,18 @@ jobs:
                       await asyncio.sleep(1)
                       res = await qmp.execute('guest-exec-status',pid)
                   if res['exitcode'] == 0:
-                      print(base64.b64decode(res['out-data']).decode('utf-8'))
+                      return base64.b64decode(res['out-data']).decode('utf-8')
                   else:
                       raise CommandError(base64.b64decode(res['err-data']).decode('utf-8'))
-              await run("while ! type systemctl &> /dev/null; sleep 10; done")
+              async def run_force(cmd):
+                  while True:
+                      try:
+                          res = run(cmd)
+                          break
+                      except:
+                          await asyncio.sleep(1)
+                  return res
+              await run_force("systemctl")
           asyncio.run(main())
         shell: python
         env:
