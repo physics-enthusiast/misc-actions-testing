@@ -158,7 +158,6 @@ jobs:
                       except:
                           await asyncio.sleep(1)
                   return res
-              res = await run_force("echo $PATH", print_output=True, print_error=True)
               res = await run_force("systemctl is-system-running", print_output=True, print_error=True)
               res = await run("uname -r", print_output=True, print_error=True)
           asyncio.run(main())
