@@ -146,17 +146,19 @@ jobs:
                           if print_output:
                               print(output)
                           return output
+                      if print_output:
+                          print('Command succeeded')
                   else:
                       if res.has_key('err-data'): 
                           output = base64.b64decode(res['err-data']).decode('utf-8')
                           if print_error:
                               print(output)
                           raise CommandError(output)
-                      raise CommandError()
+                      raise CommandError('Command failed, no error message produced')
               async def run_force(cmd, print_output=False, print_error=False):
                   while True:
                       try:
-                          await run(cmd, print_output, print_error)
+                          res = await run(cmd, print_output, print_error)
                           break
                       except:
                           await asyncio.sleep(1)
