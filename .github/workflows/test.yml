@@ -135,7 +135,7 @@ jobs:
               await qmp.connect(qga_sock)
               res = await qmp.execute('guest-ping')
               async def run(cmd, print_output=False, print_error=False):
-                  pid = await qmp.execute('guest-exec',{'path':'/run/current-system/sw/bin/bash','arg':['-c', f'\\"{cmd}\\"'],'capture-output':'separated'})
+                  pid = await qmp.execute('guest-exec',{'path':'/run/current-system/sw/bin/bash','arg':['-c', '\\\"{}\\\"'.format(cmd)],'capture-output':'separated'})
                   res = await qmp.execute('guest-exec-status',pid)
                   while not res['exited']:
                       await asyncio.sleep(1)
