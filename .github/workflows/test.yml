@@ -119,7 +119,7 @@ jobs:
           class CommandError(Exception):
               "Nonzero exit of guest-exec command"
               pass
-          cmd = "qemu-system-x86_64 -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path={os.environ['TMPDIR']}/extraction -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
+          cmd = f"qemu-system-x86_64 -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path={os.environ['TMPDIR']}/extraction -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd)
               qmp = QMPClient()
