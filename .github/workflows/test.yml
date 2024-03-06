@@ -147,7 +147,7 @@ jobs:
                               print(output)
                           return output
                   else:
-                      if res.has_key('out-data'): 
+                      if res.has_key('err-data'): 
                           output = base64.b64decode(res['err-data']).decode('utf-8')
                           if print_error:
                               print(output)
