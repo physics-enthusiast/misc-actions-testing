@@ -141,20 +141,15 @@ jobs:
                       await asyncio.sleep(1)
                       res = await qmp.execute('guest-exec-status',pid)
                   if res['exitcode'] == 0:
-                      if res.has_key('out-data'):
-                          output = base64.b64decode(res['out-data']).decode('utf-8')
-                          if print_output:
-                              print(output)
-                          return output
+                      output = base64.b64decode(res['out-data']).decode('utf-8')
                       if print_output:
-                          print('Command succeeded')
+                          print(output)
+                      return output
                   else:
-                      if res.has_key('err-data'): 
-                          output = base64.b64decode(res['err-data']).decode('utf-8')
-                          if print_error:
-                              print(output)
-                          raise CommandError(output)
-                      raise CommandError('Command failed, no error message produced')
+                      output = base64.b64decode(res['err-data']).decode('utf-8')
+                      if print_error:
+                          print(output)
+                      raise CommandError(output)
               async def run_force(cmd, print_output=False, print_error=False):
                   while True:
                       try:
