@@ -146,8 +146,6 @@ jobs:
                           if print_output:
                               print(output)
                           return output
-                      else:
-                          print("Command succeeded")
                   else:
                       if 'err-data' in res:
                           output = base64.b64decode(res['err-data']).decode('utf-8')
@@ -164,9 +162,9 @@ jobs:
                       except:
                           await asyncio.sleep(1)
                   return res
-              res = await run_force("systemctl is-system-running --wait", print_output=True, print_error=True)
-              await run("mkdir -p /tmp/host_files", print_output=True, print_error=True)
-              await run("mount -t 9p -o trans=virtio,version=9p2000.L hostshare /tmp/host_files", print_output=True, print_error=True)
+              res = await run_force("systemctl is-system-running --wait", print_error=True)
+              await run("mkdir -p /tmp/host_files", print_error=True)
+              await run("mount -t 9p -o trans=virtio,version=9p2000.L hostshare /tmp/host_files", print_error=True)
           asyncio.run(main())
         shell: python
         env:
