@@ -165,9 +165,7 @@ jobs:
                           await asyncio.sleep(1)
                   return res
               res = await run_force("systemctl is-system-running", print_output=True, print_error=True)
-              await run("echo $PATH", print_output=True, print_error=True)
               await run("mkdir -p /tmp/host_files", print_output=True, print_error=True)
-              await run("nix", print_output=True, print_error=True)
               await run("mount -t 9p -o trans=virtio,version=9p2000.L hostshare /tmp/host_files", print_output=True, print_error=True)
           asyncio.run(main())
         shell: python
