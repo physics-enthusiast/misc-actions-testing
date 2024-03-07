@@ -168,6 +168,7 @@ jobs:
               res = await run_force("systemctl is-system-running --wait", print_error=True)
               await run("mkdir -p /tmp/host_files", print_error=True)
               await run("mount -t 9p -o trans=virtio,version=9p2000.L hostshare /tmp/host_files", print_error=True)
+              await run("ls /tmp/host_files", print_error=True)
           asyncio.run(main())
         shell: python
 
