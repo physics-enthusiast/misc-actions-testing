@@ -42,7 +42,7 @@ jobs:
               print(f'NIXOS_RUN_TMPDIR={tmppath}', file=fh)
               print(f'NIXOS_RUN_CMDDIR={cmdpath}', file=fh)
               print(f'NIXOS_RUN_MNTDIR={abspath}', file=fh)
-              print(f'NIXOS_RUN_GSTDIR={gstdir}', file=fh)
+              print(f'NIXOS_RUN_GSTDIR={gstpath}', file=fh)
           with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
               print(f'image-path={os.path.abspath(r"${{ runner.temp }}/nixos-run/nixos.qcow2")}', file=fh)
         shell: python
@@ -89,7 +89,7 @@ jobs:
         with:
           path: ${{ env.NIXOS_RUN_CMDDIR }}/cmd.sh
           contents: |
-            echo "Hello World"
+            ls /tmp/mnt
           write-mode: overwrite
       - name: Fetch prebuilt NixOS image manifest
         id: read_manifest
