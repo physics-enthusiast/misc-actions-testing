@@ -31,10 +31,13 @@ jobs:
         id: get_paths
         run: |
           import os
-          relpath = "${{ runner.temp }}" or "./"
+          tmppath = "${{ runner.temp }}/nixos-run"
+          os.makedirs(tmppath, exist_ok=True)
+          relpath = "${{ runner.temp }}/nixos-run" or "./"
           abspath = os.path.abspath(relpath)
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-              print(f'OUTDIR={abspath}', file=fh)
+          with open(os.environ['GITHUB_ENV'], 'a') as fh:
+              print(f'NIXOS_RUN_TMPDIR={tmppath}', file=fh) 
+              print(f'NIXOS_RUN_OUTDIR={abspath}', file=fh)
         shell: python
       - name: Prepare common shell (Windows)
         if: runner.os == 'Windows'
@@ -48,20 +51,22 @@ jobs:
       - name: Prepare common shell (Linux)
         if: runner.os == 'Linux'
         run: |
+          cd $NIXOS_RUN_TMPDIR
           mkdir bash-redirect
           ln -s $(which bash) bash-redirect/wsl-bash
           echo "$PWD/bash-redirect" >> $GITHUB_PATH
       - name: Prepare common shell (Darwin)
         if: runner.os == 'macOS'
         run: |
+          cd $NIXOS_RUN_TMPDIR
           mkdir bash-redirect
           ln -s $(which bash) bash-redirect/wsl-bash
           echo "$PWD/bash-redirect" >> $GITHUB_PATH
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          aria2c --dir="${{ runner.temp }}" https://github.com/physics-enthusiast/qemu-patched-compile/releases/download/qemu-test/qemu-setup.exe
-          Start-Process -FilePath '${{ runner.temp }}/qemu-setup.exe' -ArgumentList '/S /D=C:\Program Files\qemu' -NoNewWindow -Wait -PassThru -RedirectStandardOutput output.txt -RedirectStandardError error.txt
+          aria2c --dir="${{ env.NIXOS_RUN_TMPDIR }}" https://github.com/physics-enthusiast/qemu-patched-compile/releases/download/qemu-test/qemu-setup.exe
+          Start-Process -FilePath '${{ env.NIXOS_RUN_TMPDIR }}/qemu-setup.exe' -ArgumentList '/S /D=C:\Program Files\qemu' -NoNewWindow -Wait -PassThru -RedirectStandardOutput output.txt -RedirectStandardError error.txt
           Add-Content $env:GITHUB_PATH "C:\Program Files\qemu"
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -82,32 +87,30 @@ jobs:
         id: restore-cache-image
         uses: actions/cache/restore@v4
         with:
-          path: ${{ runner.temp }}/nixos-qcow.7z
+          path: ${{ env.NIXOS_RUN_TMPDIR }}/nixos-qcow.7z
           key: ${{ steps.read_manifest.outputs.tag_name }}
       - name: Fetch prebuilt NixOS image
         if: steps.restore-cache-image.outputs.cache-hit != 'true' 
         run: |
-          sudo aria2c --dir="$TMPDIR" https://github.com/physics-enthusiast/nixos-image/releases/download/${{ steps.read_manifest.outputs.tag_name }}/nixos-qcow.7z
+          sudo aria2c --dir="$NIXOS_RUN_TMPDIR" https://github.com/physics-enthusiast/nixos-image/releases/download/${{ steps.read_manifest.outputs.tag_name }}/nixos-qcow.7z
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
+          WSLENV: GITHUB_OUTPUT/p:NIXOS_RUN_TMPDIR/p
       - name: Save cache
         id: save-cache-image
         uses: actions/cache/save@v4
         if: steps.restore-cache-image.outputs.cache-hit != 'true'
         with:
-          path: ${{ runner.temp }}/nixos-qcow.7z
+          path: ${{ env.NIXOS_RUN_TMPDIR }}/nixos-qcow.7z
           key: ${{ steps.read_manifest.outputs.tag_name }}
       - name: Extract image
         run: |
-          mkdir $TMPDIR/extraction
-          7z e $TMPDIR/nixos-qcow.7z -o"$TMPDIR/extraction"
-          mv $TMPDIR/extraction/* $TMPDIR/nixos.qcow2
+          mkdir $NIXOS_RUN_TMPDIR/extraction
+          7z e $NIXOS_RUN_TMPDIR/nixos-qcow.7z -o"$NIXOS_RUN_TMPDIR/extraction"
+          mv $NIXOS_RUN_TMPDIR/extraction/* $NIXOS_RUN_TMPDIR/nixos.qcow2
         shell: wsl-bash {0}
         env:
-          WSLENV: GITHUB_OUTPUT/p:TMPDIR/p
-          TMPDIR: ${{ runner.temp }}
+          WSLENV: GITHUB_OUTPUT/p:NIXOS_RUN_TMPDIR/p
       - name: Start VM
         run: |
           import os
@@ -119,7 +122,7 @@ jobs:
           class CommandError(Exception):
               "Nonzero exit of guest-exec command"
               pass
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path={os.environ['TMPDIR']}/extraction -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare -smp {os.cpu_count()} -nic user -hda {os.environ['TMPDIR']}/nixos.qcow2"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path={os.environ['NIXOS_RUN_TMPDIR']}/extraction -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare -smp {os.cpu_count()} -nic user -hda {os.environ['NIXOS_RUN_TMPDIR']}/nixos.qcow2"
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
               qmp = QMPClient()
@@ -167,7 +170,5 @@ jobs:
               await run("mount -t 9p -o trans=virtio,version=9p2000.L hostshare /tmp/host_files", print_error=True)
           asyncio.run(main())
         shell: python
-        env:
-          TMPDIR: ${{ runner.temp }}
 
           
