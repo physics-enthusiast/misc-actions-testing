@@ -32,12 +32,15 @@ jobs:
         run: |
           import os
           tmppath = r"${{ runner.temp }}/nixos-run"
+          cmdpath = r"${{ runner.temp }}/nixos-run/cmd"
           os.makedirs(tmppath, exist_ok=True)
+          os.makedirs(cmdpath, exist_ok=True)
           relpath = r"${{ runner.temp }}/nixos-run" or r"./"
           abspath = os.path.abspath(relpath)
           with open(os.environ['GITHUB_ENV'], 'a') as fh:
-              print(f'NIXOS_RUN_TMPDIR={tmppath}', file=fh) 
-              print(f'NIXOS_RUN_OUTDIR={abspath}', file=fh)
+              print(f'NIXOS_RUN_TMPDIR={tmppath}', file=fh)
+              print(f'NIXOS_RUN_CMDDIR={tmppath}', file=fh)
+              print(f'NIXOS_RUN_MNTDIR={abspath}', file=fh)
         shell: python
       - name: Prepare common shell (Windows)
         if: runner.os == 'Windows'
@@ -77,6 +80,13 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install qemu --force
+      - name: Prepare command
+        uses: DamianReeves/write-file-action@master
+        with:
+          path: ${{ env.NIXOS_RUN_CMDDIR }}/cmd.sh
+          contents: |
+            echo "Hello World"
+          write-mode: overwrite
       - name: Fetch prebuilt NixOS image manifest
         id: read_manifest
         uses: cityoflosangeles/fetch-latest-github-release@v2.0.3
@@ -122,7 +132,7 @@ jobs:
           class CommandError(Exception):
               "Nonzero exit of guest-exec command"
               pass
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path={os.environ['NIXOS_RUN_TMPDIR']}/extraction -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare -smp {os.cpu_count()} -nic user -hda {os.environ['NIXOS_RUN_TMPDIR']}/nixos.qcow2"
+          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path={os.environ['NIXOS_RUN_CMDDIR']} -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=cmd -smp {os.cpu_count()} -nic user -hda {os.environ['NIXOS_RUN_TMPDIR']}/nixos.qcow2"
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
               qmp = QMPClient()
@@ -166,11 +176,10 @@ jobs:
                           await asyncio.sleep(1)
                   return res
               await run_force("systemctl is-system-running --wait", print_error=True)
-              await run("mkdir -p /tmp/host_files", print_error=True)
-              await run("mount -t 9p -o trans=virtio,version=9p2000.L hostshare /tmp/host_files", print_error=True)
-              await run("ls /", print_output=True, print_error=True)
-              res = await run("ls /tmp/host_files", print_output=True, print_error=True)
-              print(res)
+              await run("mkdir -p /tmp/cmd", print_error=True)
+              await run("mount -t 9p -o trans=virtio,version=9p2000.L cmd /tmp/cmd", print_error=True)
+              await run("chmod 755 /tmp/cmd/cmd.sh", print_error=True)
+              await run("/tmp/cmd/cmd.sh", print_output=True, print_error=True)
           asyncio.run(main())
         shell: python
 
