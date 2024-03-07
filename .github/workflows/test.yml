@@ -31,9 +31,9 @@ jobs:
         id: get_paths
         run: |
           import os
-          tmppath = "${{ runner.temp }}/nixos-run"
+          tmppath = r"${{ runner.temp }}/nixos-run"
           os.makedirs(tmppath, exist_ok=True)
-          relpath = "${{ runner.temp }}/nixos-run" or "./"
+          relpath = r"${{ runner.temp }}/nixos-run" or r"./"
           abspath = os.path.abspath(relpath)
           with open(os.environ['GITHUB_ENV'], 'a') as fh:
               print(f'NIXOS_RUN_TMPDIR={tmppath}', file=fh) 
