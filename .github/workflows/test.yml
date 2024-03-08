@@ -138,7 +138,7 @@ jobs:
           class CommandError(Exception):
               "Nonzero exit of guest-exec command"
               pass
-          cmd = f"qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path=${'"'}${os.environ['NIXOS_RUN_CMDDIR']}${'"'} -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=cmd -fsdev local,security_model=mapped,id=fsdev1,path=${'"'}${os.environ['NIXOS_RUN_MNTDIR']}${'"'} -device virtio-9p-pci,id=fs1,fsdev=fsdev1,mount_tag=mnt -smp ${os.cpu_count()} -nic user -hda ${'"'}${os.environ['NIXOS_RUN_TMPDIR']}/nixos.qcow2${'"'}"
+          cmd = f'''qemu-system-x86_64 -nographic -m 4096 -chardev socket,id=qga0,host=localhost,port=9876,server=on -device virtio-serial -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 -fsdev local,security_model=mapped,id=fsdev0,path=${'"'}${os.environ['NIXOS_RUN_CMDDIR']}${'"'} -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=cmd -fsdev local,security_model=mapped,id=fsdev1,path=${'"'}${os.environ['NIXOS_RUN_MNTDIR']}${'"'} -device virtio-9p-pci,id=fs1,fsdev=fsdev1,mount_tag=mnt -smp ${os.cpu_count()} -nic user -hda ${'"'}${os.environ['NIXOS_RUN_TMPDIR']}/nixos.qcow2${'"'}'''
           async def main():
               proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
               qmp = QMPClient()
@@ -182,8 +182,8 @@ jobs:
                           await asyncio.sleep(1)
                   return res
               await run_force("systemctl is-system-running --wait", print_error=True)
-              await run("mkdir -p ${'"'}${os.environ['NIXOS_RUN_GSTDIR']}/nixos.qcow2${'"'}", print_error=True)
-              await run("mount -t 9p -o trans=virtio,version=9p2000.L mnt ${'"'}${os.environ['NIXOS_RUN_GSTDIR']}/nixos.qcow2${'"'}", print_error=True)
+              await run(f'''mkdir -p ${'"'}${os.environ['NIXOS_RUN_GSTDIR']}/nixos.qcow2${'"'}''', print_error=True)
+              await run(f'''mount -t 9p -o trans=virtio,version=9p2000.L mnt ${'"'}${os.environ['NIXOS_RUN_GSTDIR']}/nixos.qcow2${'"'}''', print_error=True)
               await run("mkdir -p /tmp/cmd", print_error=True)
               await run("mount -t 9p -o trans=virtio,version=9p2000.L cmd /tmp/cmd", print_error=True)
               await run("chmod 755 /tmp/cmd/cmd.sh", print_error=True)
