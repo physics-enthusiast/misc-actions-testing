@@ -38,13 +38,14 @@ jobs:
           relpath = r"${{ runner.temp }}/nixos-run" or r"./"
           abspath = os.path.abspath(relpath)
           gstpath = r"" or r"/tmp/mnt"
+          imgpath = os.path.abspath(r"${{ runner.temp }}/nixos-run/nixos.qcow2")
           with open(os.environ['GITHUB_ENV'], 'a') as fh:
               print(f'NIXOS_RUN_TMPDIR={tmppath}', file=fh)
               print(f'NIXOS_RUN_CMDDIR={cmdpath}', file=fh)
               print(f'NIXOS_RUN_MNTDIR={abspath}', file=fh)
               print(f'NIXOS_RUN_GSTDIR={gstpath}', file=fh)
           with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-              print(f'image-path={os.path.abspath(r"${{ runner.temp }}/nixos-run/nixos.qcow2")}', file=fh)
+              print(f'image-path={imgpath}', file=fh)
         shell: python
       - name: Prepare common shell (Windows)
         if: runner.os == 'Windows'
