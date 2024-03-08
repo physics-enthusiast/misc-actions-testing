@@ -183,8 +183,8 @@ jobs:
                           await asyncio.sleep(1)
                   return res
               await run_force("systemctl is-system-running --wait", print_error=True)
-              await run(f'''mkdir -p "{os.environ['NIXOS_RUN_GSTDIR']}/nixos.qcow2"''', print_error=True)
-              await run(f'''mount -t 9p -o trans=virtio,version=9p2000.L mnt "{os.environ['NIXOS_RUN_GSTDIR']}/nixos.qcow2"''', print_error=True)
+              await run(f'''mkdir -p "{os.environ['NIXOS_RUN_GSTDIR']}"''', print_error=True)
+              await run(f'''mount -t 9p -o trans=virtio,version=9p2000.L mnt "{os.environ['NIXOS_RUN_GSTDIR']}"''', print_error=True)
               await run("mkdir -p /tmp/cmd", print_error=True)
               await run("mount -t 9p -o trans=virtio,version=9p2000.L cmd /tmp/cmd", print_error=True)
               await run("chmod 755 /tmp/cmd/cmd.sh", print_error=True)
