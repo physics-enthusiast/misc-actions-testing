@@ -27,7 +27,8 @@ jobs:
                     modules = [
                       ({ config, pkgs, lib, ... }: {
                         boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-                      }) 
+                      })
+                      ./hardware-configuration.nix
                     ];
                   };
               };
@@ -36,7 +37,7 @@ jobs:
       - uses: physics-enthusiast/nixos-run-action@main
         with:
           cmd: |
-            parted
-            sudo nixos-rebuild switch --flake '/tmp/mnt#nixos'
+            nixos-generate-config --dir '/tmp/mnt'
+            nixos-rebuild switch --flake '/tmp/mnt#nixos'
 
           
