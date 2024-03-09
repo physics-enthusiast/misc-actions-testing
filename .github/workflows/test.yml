@@ -29,6 +29,19 @@ jobs:
                       ({ config, pkgs, lib, ... }: {
                         boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                       })
+                      ({ lib, ... }: {
+                        options = {
+                          fileExtension = lib.mkOption {
+                            type = lib.types.str;
+                            description = "Declare the path of the wanted file in the output directory";
+                            default = "";
+                          };
+                          formatAttr = lib.mkOption {
+                            type = lib.types.str;
+                            description = "Declare the default attribute to build";
+                          };
+                        };
+                      })
                       #./configuration.nix
                       #./hardware-configuration.nix
                     ];
