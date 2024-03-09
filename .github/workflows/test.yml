@@ -20,7 +20,7 @@ jobs:
                 nixpkgs.follows = "original/nixpkgs";
               };
 
-              outputs = { self, nixpkgs, original, extension }:
+              outputs = { self, nixpkgs, original }:
                 original.outputs // {
                 nixosConfigurations.nixos =
                   original.nixosConfigurations.nixos.extendModules {
