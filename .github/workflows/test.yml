@@ -25,11 +25,12 @@ jobs:
                 nixosConfigurations.nixos =
                   original.nixosConfigurations.nixos.extendModules {
                     modules = [
+                      original.nixosConfigurations.nixos.config.formatConfigs."qcow"
                       ({ config, pkgs, lib, ... }: {
                         boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                       })
-                      ./configuration.nix
-                      ./hardware-configuration.nix
+                      #./configuration.nix
+                      #./hardware-configuration.nix
                     ];
                   };
               };
