@@ -10,10 +10,32 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: flake.nix
+          contents: |
+            {
+              inputs = {
+                original.url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
+                nixpkgs.follows = "original/nixpkgs";
+              };
+
+              outputs = { self, nixpkgs, original, extension }:
+                original.outputs // {
+                nixosConfigurations.nixos =
+                  original.nixosConfigurations.nixos.extendModules {
+                    modules = [
+                      ({ config, pkgs, lib, ... }: {
+                        boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+                      }) 
+                    ];
+                  };
+              };
+            }
+          write-mode: overwrite
       - uses: physics-enthusiast/nixos-run-action@main
         with:
           cmd: |
-            uname
-          debug: true
+            nixos-rebuild switch --flake '.#nixos'
 
           
