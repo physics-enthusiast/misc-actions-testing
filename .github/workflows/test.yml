@@ -42,8 +42,6 @@ jobs:
                           };
                         };
                       })
-                      #./configuration.nix
-                      #./hardware-configuration.nix
                     ];
                   };
               };
@@ -52,7 +50,6 @@ jobs:
       - uses: physics-enthusiast/nixos-run-action@main
         with:
           cmd: |
-            nixos-generate-config --dir '/tmp/mnt'
             nixos-rebuild switch --flake '/tmp/mnt#nixos'
 
           
