@@ -15,35 +15,35 @@ jobs:
           path: flake.nix
           contents: |
             {
-              inputs = {
-                original.url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
-                nixpkgs.follows = "original/nixpkgs";
-              };
+            inputs = {
+              original.url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
+              nixpkgs.follows = "original/nixpkgs";
+            };
 
-              outputs = { self, nixpkgs, original }:
-                original.outputs // {
-                nixosConfigurations.nixos =
-                  original.nixosConfigurations.nixos.extendModules {
-                    modules = [
-                      original.nixosConfigurations.nixos.config.formatConfigs."qcow"
-                      ({ config, pkgs, lib, ... }: {
-                        boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-                      })
-                      ({ lib, ... }: {
-                        options = {
-                          fileExtension = lib.mkOption {
-                            type = lib.types.str;
-                            description = "Declare the path of the wanted file in the output directory";
-                            default = "";
-                          };
-                          formatAttr = lib.mkOption {
-                            type = lib.types.str;
-                            description = "Declare the default attribute to build";
-                          };
+            outputs = { self, nixpkgs, original }:
+              original.outputs // {
+              nixosConfigurations.nixos =
+                original.nixosConfigurations.nixos.extendModules {
+                  modules = [
+                    original.nixosConfigurations.nixos.config.formatConfigs."qcow"
+                    ({ config, pkgs, lib, ... }: {
+                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+                    })
+                    ({ lib, ... }: {
+                      options = {
+                        fileExtension = lib.mkOption {
+                          type = lib.types.str;
+                          description = "Declare the path of the wanted file in the output directory";
+                          default = "";
                         };
-                      })
-                    ];
-                  };
+                        formatAttr = lib.mkOption {
+                          type = lib.types.str;
+                          description = "Declare the default attribute to build";
+                        };
+                      };
+                    })
+                  ];
+                };
               };
             }
           write-mode: overwrite
