@@ -36,6 +36,6 @@ jobs:
       - uses: physics-enthusiast/nixos-run-action@main
         with:
           cmd: |
-            nixos-rebuild switch --flake '/tmp/mnt#nixos'
+            sudo nixos-rebuild switch --flake '/tmp/mnt#nixos'
 
           
