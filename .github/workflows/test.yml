@@ -89,6 +89,6 @@ jobs:
       - uses: physics-enthusiast/nixos-run-action@main
         with:
           cmd: |
-            nixos-rebuild switch --flake '/tmp/mnt#nixos'
+            nixos-rebuild switch --show-trace --flake '/tmp/mnt#nixos'
 
           
