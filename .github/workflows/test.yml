@@ -22,7 +22,7 @@ jobs:
 
             outputs = { self, nixpkgs, original }:
               let
-              overrideModule = { oldModule, newPkgs }: ({ config, pkgs, lib, modulesPath, ... }@inputs:
+              overrideModule = oldModule: newPkgs: ({ config, pkgs, lib, modulesPath, ... }@inputs:
                 let
                 parsedModule = ( 
                   if builtins.isString oldModule
