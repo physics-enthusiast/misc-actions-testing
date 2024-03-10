@@ -21,15 +21,44 @@ jobs:
             };
 
             outputs = { self, nixpkgs, original }:
+              let
+              overrideModule = { oldModule, newPkgs }: ({ config, pkgs, lib, modulesPath, ... }@inputs:
+                let
+                parsedModule = 
+                  if isString oldModule
+                  then
+                    if builtins.substring 0 1 oldModule == "/"
+                    then { key = oldModule; value = import oldModule; }
+                    else { key = toString modulesPath + "/" + oldModule; value = import (toString modulesPath + "/" + oldModule); }
+
+                  else if isConvertibleWithToString oldModule
+                  then
+                    if oldModule?key && oldModule.key != toString oldModule
+                    then
+                      throw "Module to be converted is an attribute set that can be converted to a string (${toString oldModule}) but also has a `.key` attribute (${oldModule.key}) with a different value. This makes it ambiguous which module should be disabled."
+                    else
+                      { key = (toString oldModule); value = import (toString oldModule); }
+                      
+
+                  else if isAttrs oldModule
+                  then
+                    if oldModule?key
+                      { key = oldModule.key; value = import (toString oldModule); }
+                    else throw "Module to be converted is an attribute set, presumably a module, that does not have a `key` attribute. This means that the module system doesn't have any means to identify the original module that should be disabled. Make sure that you've passed the correct argument: a string path relative to modulesPath, a path value, or the module itself (as an attribute set)."
+
+                  else throw "Module to be converted must be a path, string, the module itself (as an attribute set), or a value supported by toString. However, it is none of that, but is of type ${builtins.typeOf oldModule}.";
+                in
+                {
+                  disabledModules = [ parsedModule.value ];
+                }//(oldModule (inputs//{pkgs = newPkgs;}));
+              })
+              in
               original.outputs // {
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos.extendModules {
                   modules = [
                     original.nixosConfigurations.nixos.config.formatConfigs."qcow"
-                    ({ config, pkgs, lib, ... }: {
-                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-                    })
-                    ({ lib, ... }: {
+                    ({ lib, ... }: {Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
                       options = {
                         fileExtension = lib.mkOption {
                           type = lib.types.str;
@@ -41,6 +70,11 @@ jobs:
                           description = "Declare the default attribute to build";
                         };
                       };
+                    })
+                    ({ config, pkgs, lib, ... }: {
+                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { system = "aarch64-linux"; })) ]
+                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+                      virtualisation.waydroid.enable = true;
                     })
                   ];
                 };
