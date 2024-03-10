@@ -51,7 +51,7 @@ jobs:
                       throw "Module to be converted is an attribute set, presumably a module, that does not have a `key` attribute. This means that the module system doesn't have any means to identify the original module that should be disabled. Make sure that you've passed the correct argument: a string path relative to modulesPath, a path value, or the module itself (as an attribute set)."
 
                   else 
-                    throw "Module to be converted must be a path, string, the module itself (as an attribute set), or a value supported by toString. However, it is none of that, but is of type ${builtins.typeOf oldModule}.";
+                    throw "Module to be converted must be a path, string, the module itself (as an attribute set), or a value supported by toString. However, it is none of that, but is of type ${builtins.typeOf oldModule}."
                 in
                 {
                   disabledModules = [ parsedModule.value ];
