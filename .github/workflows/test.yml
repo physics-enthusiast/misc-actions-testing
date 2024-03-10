@@ -54,8 +54,8 @@ jobs:
                     throw "Module to be converted must be a path, string, the module itself (as an attribute set), or a value supported by toString. However, it is none of that, but is of type ${builtins.typeOf oldModule}.");
                 in
                 {
-                  disabledModules = [ parsedModule.value ];
-                }//(oldModule (inputs//{pkgs = newPkgs;}))
+                  disabledModules = [ parsedModule.key ];
+                }//(parsedModule.value (inputs//{pkgs = newPkgs;}))
               );
               in
               original.outputs // {
