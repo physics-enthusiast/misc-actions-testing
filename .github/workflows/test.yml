@@ -24,7 +24,7 @@ jobs:
               let
               overrideModule = { oldModule, newPkgs }: ({ config, pkgs, lib, modulesPath, ... }@inputs:
                 let
-                parsedModule = 
+                parsedModule = ( 
                   if isString oldModule
                   then
                     if builtins.substring 0 1 oldModule == "/"
@@ -55,8 +55,8 @@ jobs:
                 in
                 {
                   disabledModules = [ parsedModule.value ];
-                }//(oldModule (inputs//{pkgs = newPkgs;}))
-              )
+                }//(oldModule (inputs//{pkgs = newPkgs;})));
+              );
               in
               original.outputs // {
               nixosConfigurations.nixos =
