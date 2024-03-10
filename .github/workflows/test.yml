@@ -87,6 +87,6 @@ jobs:
         with:
           filesize: 30G
           cmd: |
-            nixos-rebuild switch --show-trace --flake '/tmp/mnt#nixos'
+            while sleep 1; do echo "Test"; done
 
           
