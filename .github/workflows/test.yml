@@ -90,6 +90,6 @@ jobs:
         with:
           filesize: 30G
           cmd: |
-            nixos-rebuild switch --show-trace --flake '/tmp/mnt#nixos'
+            nixos-rebuild switch --show-trace --verbose --flake '/tmp/mnt#nixos'
 
           
