@@ -56,7 +56,7 @@ jobs:
                 {
                   disabledModules = [ parsedModule.value ];
                 }//(oldModule (inputs//{pkgs = newPkgs;}))
-              })
+              )
               in
               original.outputs // {
               nixosConfigurations.nixos =
