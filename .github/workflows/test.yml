@@ -10,6 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          df -h
       - uses: DamianReeves/write-file-action@master
         with:
           path: flake.nix
