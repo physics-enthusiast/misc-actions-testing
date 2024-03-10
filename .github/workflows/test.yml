@@ -20,7 +20,7 @@ jobs:
             {
             inputs = {
               nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-              original.url = {
+              original = {
                 url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
                 inputs.nixpkgs.follows = "nixpkgs";
               };
