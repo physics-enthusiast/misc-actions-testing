@@ -26,23 +26,18 @@ jobs:
               let
               overrideModule = oldModule: newPkgs: ({ config, pkgs, lib, modulesPath, ... }@inputs:
                 let
-                parsedModule = ( 
-                  if builtins.isString oldModule
-                  then
-                    if builtins.substring 0 1 oldModule == "/"
-                    then 
-                      { key = oldModule; value = import oldModule; }
-                    else 
-                      { key = builtins.toString modulesPath + "/" + oldModule; value = import (builtins.toString modulesPath + "/" + oldModule); }
-
-                  else if lib.isConvertibleWithToString oldModule
+                parsedModule = (
+                  if lib.isConvertibleWithToString oldModule
                   then
                     if oldModule?key && oldModule.key != builtins.toString oldModule
                     then
                       throw "Module to be converted is an attribute set that can be converted to a string (${builtins.toString oldModule}) but also has a `.key` attribute (${oldModule.key}) with a different value. This makes it ambiguous which module should be disabled."
                     else
-                      { key = (builtins.toString oldModule); value = import (builtins.toString oldModule); }
-                      
+                      if builtins.substring 0 1 oldModule == "/"
+                      then 
+                        { key = (builtins.toString oldModule); value = import (builtins.toString oldModule); }
+                      else 
+                        { key = builtins.toString modulesPath + "/" + (builtins.toString oldModule); value = import (builtins.toString modulesPath + "/" + (builtins.toString oldModule)); }
 
                   else if builtins.isAttrs oldModule
                   then
@@ -88,7 +83,7 @@ jobs:
               };
             }
           write-mode: overwrite
-      - uses: physics-enthusiast/nixos-run-action@main
+      - uses: physics-enthusiast/nixos-run-action@test
         with:
           filesize: 30G
           cmd: |
