@@ -28,7 +28,7 @@ jobs:
               overrideModule = oldModule: newPkgs: ({ config, pkgs, lib, modulesPath, ... }@inputs:
                 let
                 parsedModule = (
-                  if lib.isConvertibleWithToString oldModule
+                  if lib.strings.isConvertibleWithToString oldModule
                   then
                     if oldModule?key && oldModule.key != builtins.toString oldModule
                     then
