@@ -55,7 +55,7 @@ jobs:
                 in
                 {
                   disabledModules = [ parsedModule.value ];
-                }//(oldModule (inputs//{pkgs = newPkgs;}));
+                }//(oldModule (inputs//{pkgs = newPkgs;}))
               })
               in
               original.outputs // {
