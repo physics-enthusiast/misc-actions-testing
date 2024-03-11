@@ -78,7 +78,7 @@ jobs:
                       };
                     })
                     ({ config, pkgs, lib, ... }: {
-                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { buildPlatform = "x86_64-linux"; hostPlatform = "aarch64-linux"; })) ];
+                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { system = "x86_64-linux"; buildPlatform = "x86_64-linux"; hostPlatform = "aarch64-linux"; })) ];
                       boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                       virtualisation.waydroid.enable = true;
                     })
