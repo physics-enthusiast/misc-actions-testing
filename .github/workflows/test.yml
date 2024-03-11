@@ -90,6 +90,6 @@ jobs:
         with:
           filesize: 30G
           cmd: |
-            nixos-rebuild switch --show-trace --print-build-logs --flake '/tmp/mnt#nixos'
+            nixos-rebuild switch --show-trace --print-build-logs --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
 
           
