@@ -19,7 +19,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+              nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
                 inputs.nixpkgs.follows = "nixpkgs";
