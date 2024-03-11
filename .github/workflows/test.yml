@@ -78,7 +78,7 @@ jobs:
                       };
                     })
                     ({ config, pkgs, lib, ... }: {
-                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { system = "x86_64-linux"; crossSystem = "aarch64-linux"; })) ];
+                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { localSystem = "x86_64-linux"; crossSystem = "aarch64-linux"; })) ];
                       boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                       virtualisation.waydroid.enable = true;
                     })
@@ -86,10 +86,15 @@ jobs:
                 };
               };
             }
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 32
       - uses: catchpoint/workflow-telemetry-action@v2
       - uses: physics-enthusiast/nixos-run-action@test
         with:
           filesize: 30G
+          memory: 16G
           cmd: |
             nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
 
