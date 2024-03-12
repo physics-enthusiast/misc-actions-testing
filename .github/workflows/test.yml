@@ -91,12 +91,12 @@ jobs:
         with:
           swap-size-gb: 16
       - uses: catchpoint/workflow-telemetry-action@master
-      - uses: physics-enthusiast/nixos-run-action@imgpath-config
+      - uses: physics-enthusiast/nixos-run-action@main
         with:
           filesize: 40G
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
+            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
 
           
