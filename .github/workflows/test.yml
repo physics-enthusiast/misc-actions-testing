@@ -91,7 +91,7 @@ jobs:
         with:
           swap-size-gb: 16
       - uses: catchpoint/workflow-telemetry-action@master
-      - uses: physics-enthusiast/nixos-run-action@main
+      - uses: physics-enthusiast/nixos-run-action@test
         with:
           filesize: 40G
           memory: 16G
