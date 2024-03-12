@@ -89,12 +89,13 @@ jobs:
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
-          swap-size-gb: 32
+          swap-size-gb: 16
       - uses: catchpoint/workflow-telemetry-action@master
-      - uses: physics-enthusiast/nixos-run-action@test
+      - uses: physics-enthusiast/nixos-run-action@imgpath-config
         with:
-          filesize: 30G
+          filesize: 40G
           memory: 16G
+          image-path: /mnt/nixos.qcow2
           cmd: |
             nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
 
