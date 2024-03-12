@@ -90,7 +90,7 @@ jobs:
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 32
-      - uses: catchpoint/workflow-telemetry-action@v2
+      - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@test
         with:
           filesize: 30G
