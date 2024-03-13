@@ -97,6 +97,6 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
+            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos' || systemctl status systemd-tmpfiles-resetup.service && systemctl status systemd-binfmt.service
 
           
