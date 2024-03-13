@@ -97,6 +97,6 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos' || systemctl status systemd-tmpfiles-resetup.service && systemctl status systemd-binfmt.service && ls -l /proc/sys/fs/binfmt_misc/ && systemctl start waydroid-container.service
+            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos' || systemctl status systemd-tmpfiles-resetup.service && systemctl status systemd-binfmt.service && cat /run/binfmt/aarch64-linux && systemctl start waydroid-container.service
 
           
