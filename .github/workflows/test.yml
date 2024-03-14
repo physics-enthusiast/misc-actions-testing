@@ -81,7 +81,8 @@ jobs:
                       imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { localSystem = "x86_64-linux"; crossSystem = "aarch64-linux"; })) ];
                       boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                       virtualisation.waydroid.enable = true;
-                      systemd.services.waydroid-container.preStart = "ls -l /proc/sys/fs/binfmt_misc/";
+                      systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
+                      systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
                     })
                   ];
                 };
@@ -98,6 +99,6 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos' || systemctl status systemd-tmpfiles-resetup.service && systemctl status systemd-binfmt.service && systemctl status waydroid-container.service
+            sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
 
           
