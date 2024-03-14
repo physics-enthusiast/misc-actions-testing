@@ -84,6 +84,10 @@ jobs:
                       #systemd.services.waydroid-container.preStart = "ls -l /proc/sys/fs/binfmt_misc/";
                       systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
                       systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
+                      systemd.automounts.proc-sys-fs-binfmt_misc.requiredBy = [ "systemd-binfmt.service" ]
+                      systemd.automounts.proc-sys-fs-binfmt_misc.before = [ "systemd-binfmt.service" ]
+                      systemd.mounts.proc-sys-fs-binfmt_misc.requiredBy = [ "proc-sys-fs-binfmt_misc.automount" ]
+                      systemd.mounts.proc-sys-fs-binfmt_misc.before = [ "proc-sys-fs-binfmt_misc.automount" ]
                     })
                   ];
                 };
