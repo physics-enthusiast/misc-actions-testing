@@ -85,7 +85,7 @@ jobs:
                       systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
                       systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
                       systemd.services.systemd-binfmt.requires = [ "proc-sys-fs-binfmt_misc.automount" ];
-                      services.systemd-binfmt.after = [ "systemd-tmpfiles-setup.service" ];
+                      systemd.services.systemd-binfmt.after = [ "systemd-tmpfiles-setup.service" ];
                     })
                   ];
                 };
