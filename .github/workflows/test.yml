@@ -19,7 +19,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:arianvp/nixpkgs/fix-295365";
+              nixpkgs.url = "github:zhaofengli/nixpkgs/binfmt-qemu-static";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
                 inputs.nixpkgs.follows = "nixpkgs";
@@ -78,12 +78,14 @@ jobs:
                       };
                     })
                     ({ config, pkgs, lib, ... }: {
-                      #imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { localSystem = "x86_64-linux"; crossSystem = "aarch64-linux"; })) ];
+                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { localSystem = "x86_64-linux"; crossSystem = "aarch64-linux"; })) ];
                       boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+                      boot.binfmt.preferStaticEmulators = true;
                       virtualisation.waydroid.enable = true;
                       systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
                       systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
                       systemd.services.systemd-binfmt.requires = [ "proc-sys-fs-binfmt_misc.automount" ];
+                      services.systemd-binfmt.after = [ "systemd-tmpfiles-setup.service" ];
                     })
                   ];
                 };
