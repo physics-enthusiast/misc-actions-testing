@@ -103,6 +103,7 @@ jobs:
             sudo nixos-rebuild switch --show-trace --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
             journalctl --unit=systemd-binfmt.service
             systemctl status waydroid-container.service
+            sudo waydroid init
             waydroid session start
 
           
