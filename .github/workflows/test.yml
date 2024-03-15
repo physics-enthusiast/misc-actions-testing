@@ -104,6 +104,7 @@ jobs:
             journalctl --unit=systemd-binfmt.service
             systemctl status waydroid-container.service
             sudo waydroid init
+            waydroid log
             waydroid session start
 
           
