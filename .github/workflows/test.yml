@@ -82,8 +82,8 @@ jobs:
                       boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                       virtualisation.waydroid.enable = true;
                       #systemd.services.waydroid-container.preStart = "ls -l /proc/sys/fs/binfmt_misc/";
-                      systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
-                      systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
+                      #systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
+                      #systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
                       systemd.services.systemd-binfmt.requires = [ "proc-sys-fs-binfmt_misc.automount" ];
                     })
                   ];
