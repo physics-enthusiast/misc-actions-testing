@@ -102,7 +102,7 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            sudo nixos-rebuild switch --show-trace --verbose --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
+            sudo nixos-rebuild switch --show-trace --verbose --print-build-logs --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
             #journalctl --unit=systemd-binfmt.service
             #systemctl status waydroid-container.service
             sudo waydroid init
