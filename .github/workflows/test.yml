@@ -19,7 +19,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:zhaofengli/nixpkgs/binfmt-qemu-static";
+              nixpkgs.url = "github:physics-enthusiast/nixpkgs/binfmt-qemu-static";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
                 inputs.nixpkgs.follows = "nixpkgs";
