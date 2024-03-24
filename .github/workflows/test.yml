@@ -19,14 +19,14 @@ jobs:
             inputs = {
               nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
               original = {
-                url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
+                url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
               };
             };
             outputs = { self, nixpkgs, original }:
               original.outputs // {
               nixosConfigurations.nixos =
-                original.nixosConfigurations.nixos.extendModules {
+                original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
                     original.nixosConfigurations.nixos.config.formatConfigs."qcow"
                     ({ lib, ... }: {
