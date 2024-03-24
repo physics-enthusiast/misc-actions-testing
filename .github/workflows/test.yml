@@ -10,6 +10,45 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: flake.nix
+          write-mode: overwrite
+          contents: |
+            {
+            inputs = {
+              nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+              original = {
+                url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
+                inputs.nixpkgs.follows = "nixpkgs";
+              };
+            };
+            outputs = { self, nixpkgs, original }:
+              original.outputs // {
+              nixosConfigurations.nixos =
+                original.nixosConfigurations.nixos.extendModules {
+                  modules = [
+                    original.nixosConfigurations.nixos.config.formatConfigs."qcow"
+                    ({ lib, ... }: {
+                      options = {
+                        fileExtension = lib.mkOption {
+                          type = lib.types.str;
+                          description = "Declare the path of the wanted file in the output directory";
+                          default = "";
+                        };
+                        formatAttr = lib.mkOption {
+                          type = lib.types.str;
+                          description = "Declare the default attribute to build";
+                        };
+                      };
+                    })
+                    ({ config, pkgs, lib, ... }: {
+                      boot.kernelPackages = pkgs.linuxPackages_latest;
+                    })
+                  ];
+                };
+              };
+            }
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
@@ -21,6 +60,7 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
+            sudo nixos-rebuild switch --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
             uname -a
 
           
