@@ -10,87 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          df -h
-      - uses: DamianReeves/write-file-action@master
-        with:
-          path: flake.nix
-          write-mode: overwrite
-          contents: |
-            {
-            inputs = {
-              nixpkgs.url = "github:physics-enthusiast/nixpkgs/binfmt-qemu-static";
-              original = {
-                url = "github:physics-enthusiast/nixos-image/main?dir=nocloud";
-                inputs.nixpkgs.follows = "nixpkgs";
-              };
-            };
-
-            outputs = { self, nixpkgs, original }:
-              let
-              overrideModule = oldModule: newPkgs: ({ config, pkgs, lib, modulesPath, ... }@inputs:
-                let
-                parsedModule = (
-                  if lib.strings.isConvertibleWithToString oldModule
-                  then
-                    if oldModule?key && oldModule.key != builtins.toString oldModule
-                    then
-                      throw "Module to be converted is an attribute set that can be converted to a string (${builtins.toString oldModule}) but also has a `.key` attribute (${oldModule.key}) with a different value. This makes it ambiguous which module should be disabled."
-                    else
-                      if builtins.substring 0 1 oldModule == "/"
-                      then 
-                        { key = (builtins.toString oldModule); value = import (builtins.toString oldModule); }
-                      else 
-                        { key = builtins.toString modulesPath + "/" + (builtins.toString oldModule); value = import (builtins.toString modulesPath + "/" + (builtins.toString oldModule)); }
-
-                  else if builtins.isAttrs oldModule
-                  then
-                    if oldModule?key
-                    then 
-                      { key = oldModule.key; value = import (builtins.toString oldModule); }
-                    else 
-                      throw "Module to be converted is an attribute set, presumably a module, that does not have a `key` attribute. This means that the module system doesn't have any means to identify the original module that should be disabled. Make sure that you've passed the correct argument: a string path relative to modulesPath, a path value, or the module itself (as an attribute set)."
-
-                  else 
-                    throw "Module to be converted must be a path, string, the module itself (as an attribute set), or a value supported by toString. However, it is none of that, but is of type ${builtins.typeOf oldModule}.");
-                in
-                {
-                  disabledModules = [ parsedModule.key ];
-                }//(parsedModule.value (inputs//{pkgs = newPkgs;}))
-              );
-              in
-              original.outputs // {
-              nixosConfigurations.nixos =
-                original.nixosConfigurations.nixos.extendModules {
-                  modules = [
-                    original.nixosConfigurations.nixos.config.formatConfigs."qcow"
-                    ({ lib, ... }: {
-                      options = {
-                        fileExtension = lib.mkOption {
-                          type = lib.types.str;
-                          description = "Declare the path of the wanted file in the output directory";
-                          default = "";
-                        };
-                        formatAttr = lib.mkOption {
-                          type = lib.types.str;
-                          description = "Declare the default attribute to build";
-                        };
-                      };
-                    })
-                    ({ config, pkgs, lib, ... }: {
-                      imports = [ (overrideModule "virtualisation/waydroid.nix" (import nixpkgs { localSystem = "x86_64-linux"; crossSystem = "aarch64-linux"; })) ];
-                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-                      boot.binfmt.preferStaticEmulators = true;
-                      virtualisation.waydroid.enable = true;
-                      systemd.services.systemd-binfmt.requiredBy = [ "sysinit-reactivation.target" ];
-                      systemd.services.systemd-binfmt.before = [ "sysinit-reactivation.target" ];
-                      systemd.services.systemd-binfmt.requires = [ "proc-sys-fs-binfmt_misc.automount" ];
-                      systemd.services.systemd-binfmt.after = [ "systemd-tmpfiles-setup.service" ];
-                    })
-                  ];
-                };
-              };
-            }
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
@@ -102,11 +21,6 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            sudo nixos-rebuild switch --show-trace --verbose --print-build-logs --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
-            #journalctl --unit=systemd-binfmt.service
-            #systemctl status waydroid-container.service
-            sudo waydroid init
-            waydroid log
-            waydroid session start
+            uname -a
 
           
