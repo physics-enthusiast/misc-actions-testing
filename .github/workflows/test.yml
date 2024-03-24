@@ -55,6 +55,7 @@ jobs:
           swap-size-gb: 16
       - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@main
+        id: rebuild
         with:
           filesize: 40G
           memory: 16G
@@ -65,7 +66,7 @@ jobs:
         with:
           filesize: 40G
           memory: 16G
-          image-path: /mnt/nixos.qcow2
+          image-path: ${{ steps.rebuild.outputs.image-path }}
           cmd: |
             uname -a
 
