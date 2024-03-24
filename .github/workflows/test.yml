@@ -28,7 +28,7 @@ jobs:
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
-                    original.nixosConfigurations.nixos.config.formatConfigs."qcow"
+                    original.nixosConfigurations.nixos-nocloud-x86_64.config.formatConfigs."qcow"
                     ({ lib, ... }: {
                       options = {
                         fileExtension = lib.mkOption {
