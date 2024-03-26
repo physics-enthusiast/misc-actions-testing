@@ -17,7 +17,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+              nixpkgs.url = "github:physics-enthusiast/nixpkgs/derivation-arg-transform";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
