@@ -25,6 +25,7 @@ jobs:
             };
             outputs = { self, nixpkgs, original }:
               original.outputs // {
+              test = nixpkgs.legacypackages.tests.stdenv;
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
@@ -69,5 +70,6 @@ jobs:
           image-path: ${{ steps.rebuild.outputs.image-path }}
           cmd: |
             uname -a
+            nix build /tmp/mnt#test
 
           
