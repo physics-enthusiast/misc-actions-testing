@@ -30,7 +30,7 @@ jobs:
               filterAttrs = a: builtins.filter builtins.isAttrs a;
             in
             let
-              mergeListsRecursive = a: (filterLists a) ++ (builtins.concatMap (b: mergeListsRecursive pkgs.lib.attrValues b) (filterAttrs a));
+              mergeListsRecursive = a: (filterLists a) ++ (builtins.concatMap (b: (mergeListsRecursive (pkgs.lib.attrValues b))) (filterAttrs a));
             in
               original.outputs // {
               test = pkgs.symlinkJoin { name = "stdenv-tests-all"; paths = mergeListsRecursive (pkgs.lib.attrValues pkgs.tests.stdenv);};
