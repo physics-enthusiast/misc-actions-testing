@@ -25,7 +25,7 @@ jobs:
             };
             outputs = { self, nixpkgs, original }:
               original.outputs // {
-              test = nixpkgs.legacyPackages.x86_64-linux.tests.stdenv;
+              test = (import nixpkgs { system = "x86_64-linux"; }).tests.stdenv;
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
