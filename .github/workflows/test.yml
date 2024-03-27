@@ -26,9 +26,14 @@ jobs:
             outputs = { self, nixpkgs, original }:
             let
               pkgs = import nixpkgs { system = "x86_64-linux"; };
+              filterLists = a: builtins.filter builtins.isList a;
+              filterAttrs = a: builtins.filter builtins.isAttrs a;
+            in
+            let
+              mergeListsRecursive = a: (filterLists a) ++ (builtins.concatMap mergeListsRecursive (pkgs.lib.attrValues (filterAttrs a)))
             in
               original.outputs // {
-              test = pkgs.symlinkJoin { name = "stdenv-tests-all"; paths = (pkgs.lib.attrValues pkgs.tests.stdenv);};
+              test = pkgs.symlinkJoin { name = "stdenv-tests-all"; paths = mergeListsRecursive (pkgs.lib.attrValues pkgs.tests.stdenv);};
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
