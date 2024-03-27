@@ -77,6 +77,6 @@ jobs:
           image-path: ${{ steps.rebuild.outputs.image-path }}
           cmd: |
             uname -a
-            nix build /tmp/mnt#test
+            nix build --impure /tmp/mnt#test
 
           
