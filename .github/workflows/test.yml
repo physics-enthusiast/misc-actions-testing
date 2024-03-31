@@ -37,6 +37,7 @@ jobs:
 
                 buildPhase = ''
                   echo 'fn main() { }' > main.rs
+                  gcc -dumpmachine
                   export QEMU_STRACE=1
                   rustc --verbose main.rs
                 '';
@@ -79,7 +80,7 @@ jobs:
                       };
                     })
                     ({ config, pkgs, lib, ... }: {
-                      boot.binfmt.emulatedSystems = [ "riscv64-linux" ];
+                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                     })
                   ];
                 };
@@ -97,6 +98,6 @@ jobs:
           image-path: /mnt/nixos.qcow2
           cmd: |
             sudo nixos-rebuild switch --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
-            nix build --impure --print-build-logs --file /tmp/mnt/default.nix --argstr system riscv64-linux
+            nix build --impure --print-build-logs --file /tmp/mnt/default.nix --argstr system aarch64-linux
 
           
