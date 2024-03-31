@@ -53,7 +53,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+              nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
