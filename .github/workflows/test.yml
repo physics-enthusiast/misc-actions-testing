@@ -97,6 +97,6 @@ jobs:
           image-path: /mnt/nixos.qcow2
           cmd: |
             sudo nixos-rebuild switch --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
-            nix build --impure --print-build-logs --file /tmp/mnt/default.nix --argstr system x86_64-linux
+            nix build --impure --print-build-logs --file /tmp/mnt/default.nix --argstr system aarch64-linux
 
           
