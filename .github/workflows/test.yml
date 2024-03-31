@@ -10,6 +10,36 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          df -h
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: default.nix
+          write-mode: overwrite
+          contents: |
+            {system ? builtins.currentSystem}: let
+              pkgs = import <nixpkgs> {
+                inherit system;
+              };
+            in
+              pkgs.stdenv.mkDerivation {
+                name = "out";
+
+                unpackPhase = "true";
+
+                nativeBuildInputs = [
+                  pkgs.rustc
+                ];
+
+                buildPhase = ''
+                  echo 'fn main() { }' > main.rs
+                  rustc main.rs
+                '';
+
+                installPhase = ''
+                  cp main $out
+                '';
+              }
       - uses: DamianReeves/write-file-action@master
         with:
           path: flake.nix
@@ -17,22 +47,15 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:physics-enthusiast/nixpkgs/master";
+              nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
               };
             };
+
             outputs = { self, nixpkgs, original }:
-            let
-              pkgs = import nixpkgs { system = "x86_64-linux"; };
-              filterAttrs = a: builtins.filter builtins.isAttrs a;
-            in
-            let
-              mergeListsRecursive = a: (builtins.filter pkgs.lib.isDerivation a) ++ (builtins.concatMap (b: (mergeListsRecursive (pkgs.lib.attrValues b))) (builtins.filter (c: !(pkgs.lib.isDerivation c)) (filterAttrs a)));
-            in
               original.outputs // {
-              test = pkgs.symlinkJoin { name = "stdenv-tests-all"; paths = mergeListsRecursive (pkgs.lib.attrValues pkgs.tests.stdenv);};
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
@@ -51,7 +74,7 @@ jobs:
                       };
                     })
                     ({ config, pkgs, lib, ... }: {
-                      boot.kernelPackages = pkgs.linuxPackages_latest;
+                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
                     })
                   ];
                 };
@@ -63,20 +86,12 @@ jobs:
           swap-size-gb: 16
       - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@main
-        id: rebuild
         with:
           filesize: 40G
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            sudo nixos-rebuild boot --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
-      - uses: physics-enthusiast/nixos-run-action@main
-        with:
-          filesize: 40G
-          memory: 16G
-          image-path: ${{ steps.rebuild.outputs.image-path }}
-          cmd: |
-            uname -a
-            nix build --impure /tmp/mnt#test
+            sudo nixos-rebuild switch --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
+            nix build --impure --file /tmp/mnt/default.nix --argstr system aarch64-linux
 
           
