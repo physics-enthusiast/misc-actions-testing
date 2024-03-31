@@ -31,6 +31,10 @@ jobs:
                   pkgs.rustc
                 ];
 
+                depsBuildBuild = [
+                  pkgs.strace
+                ];
+
                 buildPhase = ''
                   echo 'fn main() { }' > main.rs
                   strace -f rustc --verbose main.rs
