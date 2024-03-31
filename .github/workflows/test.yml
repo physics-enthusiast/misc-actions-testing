@@ -38,7 +38,7 @@ jobs:
                 buildPhase = ''
                   echo 'fn main() { }' > main.rs
                   export QEMU_STRACE=1
-                  strace -f rustc --verbose main.rs
+                  rustc --verbose main.rs
                 '';
 
                 installPhase = ''
