@@ -79,7 +79,7 @@ jobs:
                       };
                     })
                     ({ config, pkgs, lib, ... }: {
-                      boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+                      boot.binfmt.emulatedSystems = [ "riscv64-linux" ];
                     })
                   ];
                 };
