@@ -33,7 +33,7 @@ jobs:
 
                 buildPhase = ''
                   echo 'fn main() { }' > main.rs
-                  rustc main.rs
+                  rustc --verbose main.rs
                 '';
 
                 installPhase = ''
