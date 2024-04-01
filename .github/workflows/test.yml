@@ -91,6 +91,15 @@ jobs:
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 16
+      - name: Setup Binfmt
+        uses: docker/setup-qemu-action@v3
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            extra-platforms = aarch64-linux
+      - run: |
+          nix build --impure --print-build-logs --file default.nix --argstr system aarch64-linux
       - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@main
         id: rebuild
