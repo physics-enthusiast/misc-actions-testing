@@ -14,40 +14,6 @@ jobs:
           df -h
       - uses: DamianReeves/write-file-action@master
         with:
-          path: default.nix
-          write-mode: overwrite
-          contents: |
-            {system ? builtins.currentSystem}: let
-              pkgs = import <nixpkgs> {
-                inherit system;
-              };
-            in
-              pkgs.stdenv.mkDerivation {
-                name = "out";
-
-                unpackPhase = "true";
-
-                nativeBuildInputs = [
-                  pkgs.rustc
-                ];
-
-                depsBuildBuild = [
-                  pkgs.strace
-                ];
-
-                buildPhase = ''
-                  echo 'fn main() { }' > main.rs
-                  gcc -dumpmachine
-                  export QEMU_STRACE=1
-                  rustc --verbose main.rs
-                '';
-
-                installPhase = ''
-                  cp main $out
-                '';
-              }
-      - uses: DamianReeves/write-file-action@master
-        with:
           path: flake.nix
           write-mode: overwrite
           contents: |
@@ -61,7 +27,34 @@ jobs:
             };
 
             outputs = { self, nixpkgs, original }:
+            let
+              pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
+            in
               original.outputs // {
+              packages."aarch64-linux".default = pkgsAarch64.stdenv.mkDerivation {
+                name = "out";
+
+                unpackPhase = "true";
+
+                nativeBuildInputs = [
+                  pkgsAarch64.rustc
+                ];
+
+                depsBuildBuild = [
+                  pkgsAarch64.strace
+                ];
+
+                buildPhase = ''
+                  echo 'fn main() { }' > main.rs
+                  gcc -dumpmachine
+                  export QEMU_STRACE=1
+                  rustc main.rs
+                '';
+
+                installPhase = ''
+                  cp main $out
+                '';
+              };
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
@@ -99,7 +92,7 @@ jobs:
           extra-conf: |
             extra-platforms = aarch64-linux
       - run: |
-          nix build --impure --print-build-logs --no-link --file default.nix --argstr system aarch64-linux
+          nix build --print-build-logs --no-link .#packages.aarch64-linux
       - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@main
         id: rebuild
@@ -115,4 +108,4 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
-            nix build --impure --print-build-logs --file /tmp/mnt/default.nix --argstr system aarch64-linux
+            nix build --print-build-logs --no-link /tmp/mnt#packages.aarch64-linux
