@@ -109,3 +109,10 @@ jobs:
           image-path: /mnt/nixos.qcow2
           cmd: |
             sudo nixos-rebuild boot --max-jobs auto --cores 1 --flake '/tmp/mnt#nixos'
+      - uses: physics-enthusiast/nixos-run-action@main
+        with:
+          filesize: 40G
+          memory: 16G
+          image-path: /mnt/nixos.qcow2
+          cmd: |
+            nix build --impure --print-build-logs --file /tmp/mnt/default.nix --argstr system aarch64-linux
