@@ -92,6 +92,7 @@ jobs:
           extra-conf: |
             extra-platforms = aarch64-linux
       - run: |
+          cat /etc/nix/nix.conf
           nix build --print-build-logs --no-link .#packages.aarch64-linux.default
       - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@main
