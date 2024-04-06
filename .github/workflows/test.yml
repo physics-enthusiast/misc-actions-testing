@@ -47,7 +47,8 @@ jobs:
                 buildPhase = ''
                   echo 'fn main() { }' > main.rs
                   gcc -dumpmachine
-                  export QEMU_STRACE=1
+                  #export QEMU_STRACE=1
+                  export RUSTC_LOG=debug
                   rustc main.rs
                 '';
 
