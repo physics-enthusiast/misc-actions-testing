@@ -48,7 +48,7 @@ jobs:
                   echo 'fn main() { }' > main.rs
                   gcc -dumpmachine
                   export QEMU_STRACE=1
-                  #export RUSTC_LOG=debug
+                  export RUSTC_LOG=debug
                   #export LD_DEBUG=all
                   rustc main.rs
                 '';
