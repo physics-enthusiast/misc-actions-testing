@@ -93,6 +93,8 @@ jobs:
           swap-size-gb: 16
       - name: Setup Binfmt
         uses: docker/setup-qemu-action@v3
+        with:
+          image: 	tonistiigi/binfmt:desktop-master
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
         with:
