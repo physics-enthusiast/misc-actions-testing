@@ -19,7 +19,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:bltavares/nixpkgs-upstream/mine";
+              nixpkgs.url = "github:physics-enthusiast/nixpkgs/binfmt-fixes";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
