@@ -50,6 +50,7 @@ jobs:
                   export QEMU_STRACE=1
                   export RUSTC_LOG=debug
                   #export LD_DEBUG=all
+                  declare -p
                   rustc main.rs
                 '';
 
