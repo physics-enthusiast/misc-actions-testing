@@ -19,7 +19,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:physics-enthusiast/nixpkgs/test";
+              nixpkgs.url = "github:physics-enthusiast/nixpkgs/qemu-no-vdso";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
