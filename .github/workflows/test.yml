@@ -29,6 +29,7 @@ jobs:
             outputs = { self, nixpkgs, original }:
             let
               pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
+              pkgsx86_64 = import nixpkgs { system = "x86_64-linux"; };
             in
               original.outputs // {
               packages."aarch64-linux".default = pkgsAarch64.stdenv.mkDerivation {
@@ -57,6 +58,13 @@ jobs:
                 installPhase = ''
                   cp main $out
                 '';
+              };
+              packages."x86_64-linux".default = pkgsx86_64.fetchFromGitLab {
+                owner = "qemu-project";
+                repo = "qemu";
+                rev = "7f087a323768585bb6063a1ee05a03a52b6a0b8f";
+                hash = "sha256-88aX+4j8rp4gjkVKhE5oKnTd2CRAugc+MLh/axaU8tY=";
+                fetchSubmodules = true;
               };
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
@@ -103,6 +111,7 @@ jobs:
             extra-platforms = aarch64-linux
       - run: |
           cat /etc/nix/nix.conf
+          nix build --no-link .#packages.x86_64-linux.default
           nix build --print-build-logs --no-link .#packages.aarch64-linux.default
       - uses: catchpoint/workflow-telemetry-action@master
       - uses: physics-enthusiast/nixos-run-action@main
