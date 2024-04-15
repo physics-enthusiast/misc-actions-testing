@@ -121,6 +121,7 @@ jobs:
           memory: 16G
           image-path: /mnt/nixos.qcow2
           cmd: |
+            nix build --no-link --log-lines 100 "/tmp/mnt"#nixosConfigurations.nixos.config.system.build.toplevel
             sudo nixos-rebuild boot --max-jobs auto --cores 2 --flake '/tmp/mnt#nixos'
       - uses: physics-enthusiast/nixos-run-action@main
         with:
