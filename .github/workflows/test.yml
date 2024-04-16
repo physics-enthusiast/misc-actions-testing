@@ -62,7 +62,7 @@ jobs:
               packages."x86_64-linux".default = pkgsx86_64.fetchFromGitLab {
                 owner = "qemu-project";
                 repo = "qemu";
-                rev = "23d7f14da4cc8cdea31f580f87c90889dcfbe815";
+                rev = "008a3b1662b60fd9e348b8ffb14f05e03c79a2b3";
                 hash = "sha256-kQVt+QaLb+WONrc/DourvfxHcGbMcCQWaJdjZvOc9zM=";
                 fetchSubmodules = true;
               };
