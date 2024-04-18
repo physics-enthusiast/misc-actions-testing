@@ -63,7 +63,7 @@ jobs:
                 owner = "qemu-project";
                 repo = "qemu";
                 rev = "008a3b1662b60fd9e348b8ffb14f05e03c79a2b3";
-                hash = "sha256-kQVt+QaLb+WONrc/DourvfxHcGbMcCQWaJdjZvOc9zM=";
+                hash = "sha256-c1MzKLcRyb1tp2gTFNG1XShN/5mkrOmBrUtcVwxbk24=";
                 fetchSubmodules = true;
               };
               nixosConfigurations.nixos =
