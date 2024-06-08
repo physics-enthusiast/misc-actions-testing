@@ -136,4 +136,4 @@ jobs:
     steps:
       - uses: DeterminateSystems/nix-installer-action@main
       - run: |
-          nix-build -E 'let pkgs = import <nixpkgs> { crossSystem = "aarch64-darwin"; }; in pkgs.vmTools.runInLinuxVM pkgs.hello'
+          nix-build -E 'let pkgs = import <nixpkgs> { crossSystem = "aarch64-linux"; }; in pkgs.vmTools.runInLinuxVM pkgs.hello'
