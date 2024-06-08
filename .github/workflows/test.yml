@@ -130,3 +130,10 @@ jobs:
           image-path: /mnt/nixos.qcow2
           cmd: |
             nix build --print-build-logs --no-link /tmp/mnt#packages.aarch64-linux.default
+
+  test2:
+    runs-on: macos-latest
+    steps:
+      - uses: DeterminateSystems/nix-installer-action@main
+      - run: |
+          nix-build -E 'let pkgs = import <nixpkgs> { crossSystem = "aarch64-darwin"; }; in pkgs.vmTools.runInLinuxVM pkgs.hello'
