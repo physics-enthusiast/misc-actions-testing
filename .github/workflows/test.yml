@@ -144,7 +144,7 @@ jobs:
               inputs = {
                 nixpkgs.url = "github:physics-enthusiast/nixpkgs/vmtools-cross";
               };
-              outputs = { self, nixpkgs, original }:
+              outputs = { self, nixpkgs }:
               let
                 pkgs = import nixpkgs { localSystem = "aarch64-darwin"; crossSystem = "aarch64-linux"; };
               in
