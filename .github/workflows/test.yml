@@ -149,7 +149,7 @@ jobs:
                 pkgs = import nixpkgs { localSystem = "aarch64-darwin"; crossSystem = "aarch64-linux"; };
               in
               {
-                packages."aarch64-darwin".default = pkgs.vmTools.runInLinuxVM pkgs.targetPackages.hello;
+                packages."aarch64-darwin".default = pkgs.vmTools.runInLinuxVM pkgs.pkgsTargetTarget.hello;
               };
             }
       - run: |
