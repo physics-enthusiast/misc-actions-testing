@@ -144,12 +144,12 @@ jobs:
               inputs = {
                 nixpkgs.url = "github:physics-enthusiast/nixpkgs/vmtools-cross";
               };
-              outputs = { self, nixpkgs, original }: {
-                packages."aarch64-darwin".default =
-                let
-                  pkgs = import nixpkgs { localSystem = "aarch64-darwin"; crossSystem = "aarch64-linux"; }
-                in
-                  pkgs.vmTools.runInLinuxVM pkgs.targetPackages.hello;
+              outputs = { self, nixpkgs, original }:
+              let
+                pkgs = import nixpkgs { localSystem = "aarch64-darwin"; crossSystem = "aarch64-linux"; }
+              in
+              {
+                packages."aarch64-darwin".default = pkgs.vmTools.runInLinuxVM pkgs.targetPackages.hello;
               };
             }
       - run: |
