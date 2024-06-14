@@ -153,4 +153,5 @@ jobs:
               };
             }
       - run: |
+          df -h
           nix build --show-trace .#packages.x86_64-linux.default
