@@ -149,14 +149,22 @@ jobs:
           contents: |
             {
               inputs = {
-                nixpkgs.url = "github:physics-enthusiast/nixpkgs/vmtools-cross";
+                nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
               };
               outputs = { self, nixpkgs }:
               let
-                pkgs = import nixpkgs { localSystem = "x86_64-linux"; crossSystem = "aarch64-linux"; };
+                pkgs = import nixpkgs { system = "x86_64-linux"; };
               in
               {
-                packages."x86_64-linux".default = pkgs.vmTools.runInLinuxVM pkgs.hello;
+                packages."x86_64-linux".default = pkgs.stdenv.mkDerivation {
+                  name = "frankenlibc";
+                  src = pkgs.fetchFromGitHub {
+                    owner = "ukontainer";
+                    repo = "frankenlibc";
+                    rev = "c166edd06173f88fec89fe364d6012afd806b537";
+                    sha256 = pkgs.lib.fakeHash;
+                  };
+                };
               };
             }
       - run: |
