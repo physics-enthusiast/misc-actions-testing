@@ -160,7 +160,7 @@ jobs:
                   postPatch = ''
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
-                      --replace-fail '/bin/sh' '${stdenv.shell}'
+                      --replace-fail '/bin/sh' '${pkgs.stdenv.shell}'
                   '';
                 };
               };
