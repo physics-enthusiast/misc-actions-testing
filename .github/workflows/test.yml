@@ -170,4 +170,4 @@ jobs:
               };
             }
       - run: |
-          nix build --show-trace .#packages.x86_64-linux.default
+          nix build -L --show-trace .#packages.x86_64-linux.default
