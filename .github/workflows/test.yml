@@ -159,7 +159,7 @@ jobs:
                     sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
                   };
 
-                  buildInputs = [ pkgs.glibc pkgs.glibc.static pkgs.zlib-ng ];
+                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
                   
                   postPatch = ''
                     patchShebangs --build ./
