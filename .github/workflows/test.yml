@@ -146,7 +146,7 @@ jobs:
               };
               outputs = { self, nixpkgs }:
               let
-                pkgs = (import nixpkgs { system = "x86_64-linux"; }).pkgsMusl;
+                pkgs = import nixpkgs { system = "x86_64-linux"; };
               in
               {
                 packages."x86_64-linux".default = pkgs.stdenv.mkDerivation {
@@ -157,6 +157,9 @@ jobs:
                     rev = "c166edd06173f88fec89fe364d6012afd806b537";
                     sha256 = "sha256-Gh/uZIq3/gLl8EcFym78RUFEDqdai8N4t7m2m/+nBSg=";
                   };
+
+                  buildInputs = [ pkgs.glibc pkgs.glibc.static ];
+                  
                   postPatch = ''
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
