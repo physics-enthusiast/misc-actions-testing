@@ -166,6 +166,8 @@ jobs:
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
                       --replace-fail '#!/bin/sh' '${pkgs.stdenv.shell}'
+                    substituteInPlace src/build.sh \
+                      --replace-fail '/bin/pwd' 'pwd'
                   '';
                 };
               };
