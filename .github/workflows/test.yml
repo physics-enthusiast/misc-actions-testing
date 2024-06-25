@@ -134,13 +134,6 @@ jobs:
   test2:
     runs-on: ubuntu-latest
     steps:
-      - uses: AdityaGarg8/remove-unwanted-software@v3
-        with:
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
-          remove-large-packages: 'true'
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DamianReeves/write-file-action@master
         with:
@@ -164,9 +157,13 @@ jobs:
                     rev = "c166edd06173f88fec89fe364d6012afd806b537";
                     sha256 = "sha256-Gh/uZIq3/gLl8EcFym78RUFEDqdai8N4t7m2m/+nBSg=";
                   };
+                  postPatch = ''
+                    substituteInPlace build.sh \
+                      --replace-fail '/bin/echo' 'echo' \
+                      --replace-fail '/bin/sh' '${stdenv.shell}'
+                  '';
                 };
               };
             }
       - run: |
-          df -h
           nix build --show-trace .#packages.x86_64-linux.default
