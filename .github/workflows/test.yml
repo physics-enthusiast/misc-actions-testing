@@ -151,9 +151,8 @@ jobs:
               {
                 packages."x86_64-linux".default = pkgs.stdenv.mkDerivation {
                   name = "frankenlibc";
-                  src = pkgs.fetchFromGitHub {
-                    owner = "ukontainer";
-                    repo = "frankenlibc";
+                  src = pkgs.fetchgit {
+                    url = "https://github.com/ukontainer/frankenlibc.git";
                     rev = "c166edd06173f88fec89fe364d6012afd806b537";
                     fetchSubmodules = true;
                     sha256 = pkgs.lib.fakeHash;
