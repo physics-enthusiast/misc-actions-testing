@@ -155,6 +155,7 @@ jobs:
                     owner = "ukontainer";
                     repo = "frankenlibc";
                     rev = "c166edd06173f88fec89fe364d6012afd806b537";
+                    fetchSubmodules = true;
                     sha256 = "sha256-Gh/uZIq3/gLl8EcFym78RUFEDqdai8N4t7m2m/+nBSg=";
                   };
 
