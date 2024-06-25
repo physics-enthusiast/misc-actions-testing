@@ -156,7 +156,7 @@ jobs:
                     repo = "frankenlibc";
                     rev = "78c8418b08188b7aa7568cde614fc121f155b969";
                     fetchSubmodules = true;
-                    sha256 = pkgs.lib.fakeHash;
+                    sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
                   };
 
                   buildInputs = [ pkgs.glibc pkgs.glibc.static ];
