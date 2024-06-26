@@ -159,13 +159,13 @@ jobs:
                     sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
                   };
 
-                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.stdenv.bintools pkgs.zlib ];
+                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.bintools pkgs.stdenv.cc.libc.static pkgs.zlib ];
                   
                   postPatch = ''
                     patchShebangs --build ./
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
-                      --replace-fail '#!/bin/sh' '${pkgs.stdenv.shell}'
+                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}'
                     substituteInPlace src/build.sh \
                       --replace-fail '/bin/pwd' 'pwd'
                   '';
