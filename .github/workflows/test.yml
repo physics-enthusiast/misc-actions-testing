@@ -169,6 +169,8 @@ jobs:
                     substituteInPlace src/build.sh \
                       --replace-fail '/bin/pwd' 'pwd'
                   '';
+
+                  env.NIX_CFLAGS_COMPILE = "-Wno-error=cast-function-type";
                 };
               };
             }
