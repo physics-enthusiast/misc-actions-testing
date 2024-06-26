@@ -173,6 +173,7 @@ jobs:
                   env.NIX_CFLAGS_COMPILE = toString [
                     "-Wno-error=cast-function-type"
                     "-Wno-error=implicit-fallthrough"
+                    "-Wno-error=uninitialized"
                   ];
                 };
               };
