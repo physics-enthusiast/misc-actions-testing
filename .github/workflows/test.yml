@@ -170,7 +170,10 @@ jobs:
                       --replace-fail '/bin/pwd' 'pwd'
                   '';
 
-                  env.NIX_CFLAGS_COMPILE = "-Wno-error=cast-function-type";
+                  env.NIX_CFLAGS_COMPILE = toString [
+                    "-Wno-error=cast-function-type"
+                    "-Wno-error=implicit-fallthrough"
+                  ];
                 };
               };
             }
