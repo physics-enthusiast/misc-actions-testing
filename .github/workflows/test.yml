@@ -160,7 +160,9 @@ jobs:
                     sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
                   };
 
-                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib pkgs.which ];
+                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
+
+                  buildInputs = [ pkgs.which pkgs.bison pkgs.flex ];
                   
                   postPatch = ''
                     patchShebangs --build ./
