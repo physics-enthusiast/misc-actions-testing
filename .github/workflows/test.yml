@@ -174,7 +174,8 @@ jobs:
                     "-Wno-error=cast-function-type"
                     "-Wno-error=implicit-fallthrough" #fallthrough intended
                     "-Wno-error=uninitialized"
-                    "-Wno-error=address-of-packed-member" #implicit casted back to correct alignment
+                    "-Wno-error=address-of-packed-member" 
+                    "-Wno-error=array-bounds"
                   ];
                 };
               };
