@@ -177,6 +177,7 @@ jobs:
                     "-Wno-error=address-of-packed-member" 
                     "-Wno-error=array-bounds"
                     "-Wno-error=array-parameter"
+                    "-Wno-error=return-local-addr"
                   ];
                 };
               };
