@@ -149,7 +149,7 @@ jobs:
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
               in
               {
-                packages."x86_64-linux".default = pkgs.stdenv.mkDerivation {
+                packages."x86_64-linux".default = pkgs.gcc6Stdenv.mkDerivation {
                   name = "frankenlibc";
                   src = pkgs.fetchFromGitHub {
                     owner = "physics-enthusiast";
@@ -169,16 +169,6 @@ jobs:
                     substituteInPlace src/build.sh \
                       --replace-fail '/bin/pwd' 'pwd'
                   '';
-
-                  env.NIX_CFLAGS_COMPILE = toString [
-                    "-Wno-error=cast-function-type"
-                    "-Wno-error=implicit-fallthrough" #fallthrough intended
-                    "-Wno-error=uninitialized"
-                    "-Wno-error=address-of-packed-member" 
-                    "-Wno-error=array-bounds"
-                    "-Wno-error=array-parameter"
-                    "-Wno-error=return-local-addr"
-                  ];
                 };
               };
             }
