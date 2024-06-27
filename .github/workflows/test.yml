@@ -165,7 +165,8 @@ jobs:
                     patchShebangs --build ./
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
-                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}'
+                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}' \
+                      --replace-fail 'RUMP_KERNEL=netbsd' 'RUMP_KERNEL=linux'
                     substituteInPlace src/build.sh \
                       --replace-fail '/bin/pwd' 'pwd'
                   '';
