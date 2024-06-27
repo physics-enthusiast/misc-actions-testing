@@ -162,7 +162,7 @@ jobs:
 
                   buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
 
-                  nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex ];
+                  nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc ];
                   
                   postPatch = ''
                     patchShebangs --build ./
