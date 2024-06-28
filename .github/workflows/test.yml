@@ -150,7 +150,7 @@ jobs:
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
               in
               {
-                packages."x86_64-linux".default = pkgs.gcc6Stdenv.mkDerivation {
+                packages."x86_64-linux".default = pkgs.stdenv.mkDerivation {
                   name = "frankenlibc";
                   src = pkgs.fetchFromGitHub {
                     owner = "physics-enthusiast";
@@ -160,7 +160,7 @@ jobs:
                     sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
                   };
 
-                  buildInputs = [ pkgs.gcc6Stdenv.cc.libc pkgs.gcc6Stdenv.cc.libc.static pkgs.zlib ];
+                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
 
                   nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
                   
