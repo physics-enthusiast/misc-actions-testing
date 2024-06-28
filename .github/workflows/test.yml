@@ -160,9 +160,9 @@ jobs:
                     sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
                   };
 
-                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
+                  buildInputs = [ pkgs.gcc6Stdenv.cc.libc pkgs.gcc6Stdenv.cc.libc.static pkgs.zlib ];
 
-                  nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc ];
+                  nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
                   
                   postPatch = ''
                     patchShebangs --build ./
