@@ -172,6 +172,8 @@ jobs:
                       --replace-fail 'RUMP_KERNEL=netbsd' 'RUMP_KERNEL=linux'
                     substituteInPlace src/build.sh \
                       --replace-fail '/bin/pwd' 'pwd'
+                    substituteInPlace linux/tools/lkl/Makefile.autoconf \
+                      --replace-fail '/bin/echo' 'echo'
                   '';
                 };
               };
