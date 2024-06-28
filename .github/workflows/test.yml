@@ -176,6 +176,10 @@ jobs:
                     substituteInPlace linux/tools/lkl/Makefile.autoconf \
                       --replace-fail '/bin/echo' 'echo'
                   '';
+
+                  env.NIX_CFLAGS_COMPILE = toString [
+                    "-Wno-error=maybe-uninitialized"
+                  ];
                 };
               };
             }
