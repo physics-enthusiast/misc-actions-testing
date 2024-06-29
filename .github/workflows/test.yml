@@ -190,9 +190,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          repository: ukontainer/frankenlibc
+          repository: physics-enthusiast/frankenlibc
           submodules: 'true'
       - run: |
           sudo mkdir -p /opt/rump && sudo chown -R $USER /opt/
