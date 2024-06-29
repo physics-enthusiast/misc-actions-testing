@@ -181,7 +181,7 @@ jobs:
                     "-Wno-error=maybe-uninitialized"
                   ];
 
-                  dontinstall = true;
+                  dontInstall = true;
                 };
               };
             }
