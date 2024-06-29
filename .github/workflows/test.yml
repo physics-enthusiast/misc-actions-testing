@@ -185,3 +185,17 @@ jobs:
             }
       - run: |
           nix build -L --show-trace .#packages.x86_64-linux.default
+
+  test3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: ukontainer/frankenlibc
+          submodules: 'true'
+      - run: |
+          sudo mkdir -p /opt/rump && sudo chown -R $USER /opt/
+          for file in `find patches/ -maxdepth 1 -type f` ; do patch -p1 < $file ; done
+          for file in `find patches/$TRAVIS_OS_NAME/ -maxdepth 1 -type f` ; do patch -p1 < $file ; done
+          ./build.sh -j2 -d /opt/rump -q -k linux notest
