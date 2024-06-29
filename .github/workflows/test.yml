@@ -155,9 +155,9 @@ jobs:
                   src = pkgs.fetchFromGitHub {
                     owner = "physics-enthusiast";
                     repo = "frankenlibc";
-                    rev = "78c8418b08188b7aa7568cde614fc121f155b969";
+                    rev = "7ed672ed9ba31a6e39ba15f82902016b2f49d8a5";
                     fetchSubmodules = true;
-                    sha256 = "sha256-vH3AhWkEMB0yKbr66imNBnUpR6c1bLwBsacDC7GDGVw=";
+                    sha256 = pkgs.lib.fakeHash;
                   };
 
                   buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
