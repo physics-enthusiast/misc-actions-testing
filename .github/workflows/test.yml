@@ -198,4 +198,4 @@ jobs:
           sudo mkdir -p /opt/rump && sudo chown -R $USER /opt/
           for file in `find patches/ -maxdepth 1 -type f` ; do patch -p1 < $file ; done
           for file in `find patches/linux/ -maxdepth 1 -type f` ; do patch -p1 < $file ; done
-          ./build.sh -j2 -d /opt/rump -q -k linux notest
+          ./build.sh -F CFLAGS=-Wno-error=maybe-uninitialized -j2 -d /opt/rump -q -k linux notest
