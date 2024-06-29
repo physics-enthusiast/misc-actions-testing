@@ -168,9 +168,9 @@ jobs:
                     patchShebangs --build ./
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
-                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}' \
-                      --replace-fail 'RUMP_KERNEL=netbsd' 'RUMP_KERNEL=linux' \
-                      --replace-fail 'RUNTESTS-test' 'RUNTESTS-notest'
+                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}'
+                    substituteInPlace Makefile \
+                      --replace-fail 'build.sh' "./build.sh -d $out -k linux notest"
                     substituteInPlace src/build.sh \
                       --replace-fail '/bin/pwd' 'pwd'
                     substituteInPlace linux/tools/lkl/Makefile.autoconf \
@@ -180,6 +180,8 @@ jobs:
                   env.NIX_CFLAGS_COMPILE = toString [
                     "-Wno-error=maybe-uninitialized"
                   ];
+
+                  dontinstall = true;
                 };
               };
             }
