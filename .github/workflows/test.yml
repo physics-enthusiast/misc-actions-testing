@@ -150,6 +150,7 @@ jobs:
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
                 frankenlibc = pkgs.stdenv.mkDerivation {
                   pname = "frankenlibc";
+                  version = "4.19"; #version of the kernel
                   src = pkgs.fetchFromGitHub {
                     owner = "physics-enthusiast";
                     repo = "frankenlibc";
