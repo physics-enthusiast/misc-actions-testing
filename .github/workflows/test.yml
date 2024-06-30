@@ -147,44 +147,45 @@ jobs:
               };
               outputs = { self, nixpkgs }:
               let
+                pkgs = import nixpkgs { system = "x86_64-linux"; };
+                frankenlibc = pkgs.stdenv.mkDerivation {
+                  name = "frankenlibc";
+                  src = pkgs.fetchFromGitHub {
+                    owner = "physics-enthusiast";
+                    repo = "frankenlibc";
+                    rev = "7ed672ed9ba31a6e39ba15f82902016b2f49d8a5";
+                    fetchSubmodules = true;
+                    sha256 = "sha256-4yJ31OK8RxJEuUHldZ7ip8sEvwPZwB4SyU+ub7m4218=";
+                  };
+
+                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
+
+                  nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
+                  
+                  postPatch = ''
+                    patchShebangs --build ./
+                    substituteInPlace build.sh \
+                      --replace-fail '/bin/echo' 'echo' \
+                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}'
+                    substituteInPlace Makefile \
+                      --replace-fail 'build.sh' "./build.sh -d $out -k linux notest"
+                    substituteInPlace src/build.sh \
+                      --replace-fail '/bin/pwd' 'pwd'
+                    substituteInPlace linux/tools/lkl/Makefile.autoconf \
+                      --replace-fail '/bin/echo' 'echo'
+                  '';
+
+                  env.NIX_CFLAGS_COMPILE = toString [
+                    "-Wno-error=maybe-uninitialized"
+                  ];
+
+                  dontInstall = true;
+                };
                 pkgsFranken = import nixpkgs {
                   system = "x86_64-linux";
                   config.replaceStdenv = {pkgs}:
                   let
                     inherit (pkgs.pkgsMusl) overrideCC stdenv;
-                    frankenlibc = pkgs.stdenv.mkDerivation {
-                      name = "frankenlibc";
-                      src = pkgs.fetchFromGitHub {
-                        owner = "physics-enthusiast";
-                        repo = "frankenlibc";
-                        rev = "7ed672ed9ba31a6e39ba15f82902016b2f49d8a5";
-                        fetchSubmodules = true;
-                        sha256 = "sha256-4yJ31OK8RxJEuUHldZ7ip8sEvwPZwB4SyU+ub7m4218=";
-                      };
-
-                      buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
-
-                      nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
-                      
-                      postPatch = ''
-                        patchShebangs --build ./
-                        substituteInPlace build.sh \
-                          --replace-fail '/bin/echo' 'echo' \
-                          --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}'
-                        substituteInPlace Makefile \
-                          --replace-fail 'build.sh' "./build.sh -d $out -k linux notest"
-                        substituteInPlace src/build.sh \
-                          --replace-fail '/bin/pwd' 'pwd'
-                        substituteInPlace linux/tools/lkl/Makefile.autoconf \
-                          --replace-fail '/bin/echo' 'echo'
-                      '';
-
-                      env.NIX_CFLAGS_COMPILE = toString [
-                        "-Wno-error=maybe-uninitialized"
-                      ];
-
-                      dontInstall = true;
-                    };
                   in
                     overrideCC stdenv (stdenv.cc.override {
                       libc = frankenlibc;
