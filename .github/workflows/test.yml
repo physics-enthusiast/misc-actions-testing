@@ -195,7 +195,7 @@ jobs:
                 };
               in
               {
-                packages."x86_64-linux".default = pkgsFranken.hello
+                packages."x86_64-linux".default = pkgsFranken.hello;
               };
             }
       - run: |
