@@ -149,7 +149,7 @@ jobs:
               let
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
                 frankenlibc = pkgs.stdenv.mkDerivation {
-                  name = "frankenlibc";
+                  pname = "frankenlibc";
                   src = pkgs.fetchFromGitHub {
                     owner = "physics-enthusiast";
                     repo = "frankenlibc";
