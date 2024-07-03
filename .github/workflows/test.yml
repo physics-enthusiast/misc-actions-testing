@@ -159,7 +159,7 @@ jobs:
                     sha256 = "sha256-4yJ31OK8RxJEuUHldZ7ip8sEvwPZwB4SyU+ub7m4218=";
                   };
 
-                  buildInputs = [ pkgs.stdenv.cc.libc pkgs.stdenv.cc.libc.static pkgs.zlib ];
+                  buildInputs = [ pkgs.zlib ];
 
                   nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
                   
@@ -167,7 +167,8 @@ jobs:
                     patchShebangs --build ./
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
-                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}'
+                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}' \
+                      --replace-fail '-static' ''
                     substituteInPlace Makefile \
                       --replace-fail 'build.sh' "./build.sh -d $out -k linux notest"
                     substituteInPlace src/build.sh \
