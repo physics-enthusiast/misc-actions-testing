@@ -179,6 +179,7 @@ jobs:
 
                   env.NIX_CFLAGS_COMPILE = toString [
                     "-Wno-error=maybe-uninitialized"
+                    "-U_FORTIFY_SOURCE"
                   ];
 
                   dontInstall = true;
