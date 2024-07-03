@@ -199,11 +199,11 @@ jobs:
                 };
               in
               {
-                packages."x86_64-linux".default = pkgsFranken.hello;
+                packages."x86_64-linux".default = pkgsFranken.qemu;
               };
             }
       - run: |
-          nix build -L --show-trace .#packages.x86_64-linux.qemu
+          nix build -L --show-trace .#packages.x86_64-linux.default
 
   test3:
     runs-on: ubuntu-latest
