@@ -203,7 +203,7 @@ jobs:
               };
             }
       - run: |
-          nix build -L --show-trace .#packages.x86_64-linux.default
+          nix build -L --show-trace .#packages.x86_64-linux.qemu
 
   test3:
     runs-on: ubuntu-latest
