@@ -199,7 +199,7 @@ jobs:
                 };
               in
               {
-                packages."x86_64-linux".default = builtins.trace pkgsFranken.stdenv.targetPlatform builtins.trace pkgsFranken.stdenv.buildPlatform pkgsFranken.gcc;
+                packages."x86_64-linux".default = pkgsFranken.gcc.override { inherit (pkgsFranken) stdenv; };
               };
             }
       - run: |
