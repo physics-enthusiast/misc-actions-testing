@@ -190,16 +190,18 @@ jobs:
                   let
                     inherit (pkgs.pkgsMusl) overrideCC stdenv;
                   in
-                    overrideCC stdenv (stdenv.cc.override {
+                    (overrideCC stdenv (stdenv.cc.override {
                       libc = frankenlibc;
                       bintools = stdenv.cc.bintools.override {
                         libc = frankenlibc;
                       };
-                    });
+                    })).override {
+                      overrides = _: _: {};
+                    };
                 };
               in
               {
-                packages."x86_64-linux".default = pkgsFranken.gcc.override { inherit (pkgsFranken) stdenv; };
+                packages."x86_64-linux".default = pkgsFranken.gcc;
               };
             }
       - run: |
