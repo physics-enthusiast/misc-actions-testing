@@ -199,7 +199,7 @@ jobs:
                 };
               in
               {
-                packages."x86_64-linux".default = pkgsFranken.gcc-unwrapped;
+                packages."x86_64-linux".default = builtins.trace pkgsFranken.stdenv pkgsFranken.gcc;
               };
             }
       - run: |
