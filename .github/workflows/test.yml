@@ -188,16 +188,17 @@ jobs:
                   system = "x86_64-linux";
                   config.replaceStdenv = {pkgs}:
                   let
-                    inherit (pkgs.pkgsMusl) overrideCC stdenv;
+                    inherit (pkgs.pkgsMusl) stdenv;
                   in
-                    (overrideCC stdenv (stdenv.cc.override {
-                      libc = frankenlibc;
-                      bintools = stdenv.cc.bintools.override {
+                    (stdenv.override (old: {
+                      cc = old.cc.override {
                         libc = frankenlibc;
+                        bintools = old.cc.bintools.override {
+                          libc = frankenlibc;
+                        };
                       };
-                    })).override {
                       overrides = _: _: {};
-                    };
+                    }));
                 };
               in
               {
