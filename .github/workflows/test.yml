@@ -211,6 +211,7 @@ jobs:
               };
             }
       - run: |
+          nix why-depends --derivation .#packages.x86_64-linux.default nixpkgs#glibc
           nix build -L --show-trace .#packages.x86_64-linux.default
 
   test3:
