@@ -188,7 +188,7 @@ jobs:
                   system = "x86_64-linux";
                   config.replaceStdenv = {pkgs}:
                   let
-                    inherit (pkgs.pkgsMusl) stdenv;
+                    inherit (pkgs) stdenv;
                   in
                     (stdenv.override {
                       cc = stdenv.cc.override (old: {
