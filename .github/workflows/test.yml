@@ -190,15 +190,19 @@ jobs:
                   let
                     inherit (pkgs.pkgsMusl) stdenv;
                   in
-                    (stdenv.override (old: {
-                      cc = old.cc.override {
+                    (stdenv.override {
+                      cc = stdenv.cc.override (old: {
                         libc = frankenlibc;
-                        bintools = old.cc.bintools.override {
+                        bintools = old.bintools.override {
                           libc = frankenlibc;
                         };
-                      };
-                      overrides = _: _: {};
-                    }));
+                        nixSupport = old.nixSupport // {
+                          cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
+                            "-isysroot {frankenlibc}/include"
+                          ]
+                        };
+                      });
+                    });
                 };
               in
               {
