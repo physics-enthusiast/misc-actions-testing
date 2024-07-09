@@ -202,7 +202,7 @@ jobs:
                           ];
                         };
                       });
-                      allowedRequisites = stdenv.allowedRequisites ++ [ frankenlibc ];
+                      allowedRequisites = null;
                     });
                 };
               in
