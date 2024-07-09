@@ -196,13 +196,17 @@ jobs:
                         bintools = old.bintools.override {
                           libc = frankenlibc;
                         };
-                        nixSupport = (old.nixSupport or {}) // {
-                          cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
-                            "--sysroot {frankenlibc}"
-                          ];
+                        #nixSupport = (old.nixSupport or {}) // {
+                        #  cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
+                        #    "--sysroot {frankenlibc}"
+                        #  ];
+                        #};
+                      } // pkgs.lib.optionalAttrs old.isGnu {
+                        cc = old.cc.override {
+                          withoutTargetLibc = true;
                         };
                       });
-                      allowedRequisites = null;
+                      #allowedRequisites = null;
                     });
                 };
               in
