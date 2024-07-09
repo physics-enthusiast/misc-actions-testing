@@ -201,7 +201,7 @@ jobs:
                         #    "--sysroot {frankenlibc}"
                         #  ];
                         #};
-                      } // pkgs.lib.optionalAttrs old.isGnu {
+                      } // pkgs.lib.optionalAttrs stdenv.cc.isGnu {
                         cc = old.cc.override {
                           withoutTargetLibc = true;
                         };
