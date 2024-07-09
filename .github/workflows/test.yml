@@ -196,7 +196,7 @@ jobs:
                         bintools = old.bintools.override {
                           libc = frankenlibc;
                         };
-                        nixSupport = old.nixSupport // {
+                        nixSupport = (old.nixSupport or {}) // {
                           cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
                             "-isysroot {frankenlibc}/include"
                           ];
