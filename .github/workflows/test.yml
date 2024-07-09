@@ -198,7 +198,7 @@ jobs:
                         };
                         nixSupport = (old.nixSupport or {}) // {
                           cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
-                            "-isysroot {frankenlibc}"
+                            "--sysroot {frankenlibc}"
                           ];
                         };
                       });
