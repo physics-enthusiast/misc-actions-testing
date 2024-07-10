@@ -202,10 +202,11 @@ jobs:
                         #  ];
                         #};
                       } // pkgs.lib.optionalAttrs old.isGNU {
-                        cc = old.cc.override {
+                        cc = (old.cc.override {
                           withoutTargetLibc = true;
-                          libcCross = frankenlibc;
-                          langCC = false;
+                          #libcCross = frankenlibc;
+                        }).overrideAttrs {
+                          env.inhibit_libc = true;
                         };
                       });
                       #allowedRequisites = null;
