@@ -205,6 +205,7 @@ jobs:
                         cc = old.cc.override {
                           withoutTargetLibc = true;
                           libcCross = frankenlibc;
+                          langCC = false;
                         };
                       });
                       #allowedRequisites = null;
