@@ -203,7 +203,7 @@ jobs:
                         #};
                       } // pkgs.lib.optionalAttrs old.isGNU {
                         cc = (old.cc.override {
-                          withoutTargetLibc = true;
+                          #withoutTargetLibc = true;
                           libcCross = frankenlibc;
                         }).overrideAttrs {
                           env.inhibit_libc = true;
