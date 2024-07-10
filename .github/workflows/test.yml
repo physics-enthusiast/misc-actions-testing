@@ -202,12 +202,18 @@ jobs:
                         #  ];
                         #};
                       } // pkgs.lib.optionalAttrs old.isGNU {
-                        cc = (old.cc.override {
+                        cc = old.cc.override {
                           withoutTargetLibc = true;
                           libcCross = frankenlibc;
-                        }).overrideAttrs {
-                          env.inhibit_libc = "true";
-                        };
+                          # force the check for cross-compilation on without
+                          # actually changing the triplet passed to cc (to
+                          # isolate programs compiled with it from host headers)
+                          stdenv = old.cc.stdenv // {
+                            targetPlatform = old.cc.stdenv.targetPlatform // {
+                              libc = "franken";
+                            };
+                          };
+                        }
                       });
                       #allowedRequisites = null;
                     });
