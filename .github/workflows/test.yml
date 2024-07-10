@@ -213,7 +213,7 @@ jobs:
                               libc = "franken";
                             };
                           };
-                        }
+                        };
                       });
                       #allowedRequisites = null;
                     });
