@@ -203,9 +203,15 @@ jobs:
                         #};
                       } // pkgs.lib.optionalAttrs old.isGNU {
                         cc = old.cc.overrideAttrs (prev: {
-                          configureFlags = (prev.configureFlags or []) ++ [
-                            "--with-native-system-header-dir=${frankenlibc}/include"
-                          ];
+                          libcCross = frankenlibc;
+                          # force the check for cross-compilation on without
+                          # actually changing the triplet passed to cc (to
+                          # isolate programs compiled with it from host headers)
+                          stdenv = old.cc.stdenv // {
+                            targetPlatform = old.cc.stdenv.targetPlatform // {
+                              isFranken = true;
+                            };
+                          };
                         });
                       });
                       #allowedRequisites = null;
