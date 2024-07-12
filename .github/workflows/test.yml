@@ -224,6 +224,7 @@ jobs:
             }
       - run: |
           nix build -L --show-trace --keep-failed .#packages.x86_64-linux.default
+          cat /tmp/nix-build-hello-2.12.1.drv-0/build/config.log
 
   test3:
     runs-on: ubuntu-latest
