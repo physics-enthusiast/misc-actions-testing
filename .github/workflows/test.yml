@@ -28,8 +28,24 @@ jobs:
 
             outputs = { self, nixpkgs, original }:
             let
-              pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
               pkgsx86_64 = import nixpkgs { system = "x86_64-linux"; };
+              qemu_src = pkgsx86_64.fetchFromGitLab {
+                owner = "qemu-project";
+                repo = "qemu";
+                rev = "095859e5d97284dd3ea666c337845dc63f6ba5e7";
+                hash = "sha256-RSsX53RVNfrMrumngj98j4aAN6LkeLcdf8/RSLmn3Cg=";
+                fetchSubmodules = true;
+              };
+              pkgsAarch64 = import nixpkgs {
+                system = "aarch64-linux";
+                overlays = [
+                  (final: prev: {
+                    qemu-user-static = prev.qemu-user-static.overrideAttrs {
+                      src = qemu_src
+                    };
+                  })    
+                ]; 
+              };
             in
               original.outputs // {
               packages."aarch64-linux".default = pkgsAarch64.stdenv.mkDerivation {
@@ -59,13 +75,7 @@ jobs:
                   cp main $out
                 '';
               };
-              packages."x86_64-linux".default = pkgsx86_64.fetchFromGitLab {
-                owner = "qemu-project";
-                repo = "qemu";
-                rev = "ebe92db2ccf791208c58d15652f9460a67cc0fdd";
-                hash = "sha256-RSsX53RVNfrMrumngj98j4aAN6LkeLcdf8/RSLmn3Cg=";
-                fetchSubmodules = true;
-              };
+              packages."x86_64-linux".default = qemu_src
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
@@ -223,7 +233,7 @@ jobs:
               };
             }
       - run: |
-          nix build -L --show-trace --keep-failed .#packages.x86_64-linux.default || sudo ls /tmp/nix-build-hello-2.12.1.drv-0/build
+          nix build -L --show-trace --keep-failed .#packages.x86_64-linux.default || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
 
   test3:
     runs-on: ubuntu-latest
