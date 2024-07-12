@@ -214,7 +214,7 @@ jobs:
                           };
                         });
                       });
-                      #allowedRequisites = null;
+                      allowedRequisites = null;
                     });
                 };
               in
