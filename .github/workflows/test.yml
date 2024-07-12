@@ -205,7 +205,7 @@ jobs:
                         libc = frankenlibc;
                         bintools = old.bintools.override {
                           libc = frankenlibc;
-                          sharedLibraryLoader = pkgs.lib.getLib old.bintools.libc
+                          sharedLibraryLoader = pkgs.lib.getLib old.bintools.libc;
                         };
                         #nixSupport = (old.nixSupport or {}) // {
                         #  cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
