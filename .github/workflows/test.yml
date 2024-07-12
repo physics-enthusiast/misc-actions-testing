@@ -223,7 +223,7 @@ jobs:
               };
             }
       - run: |
-          nix build -L --show-trace --keep-failed .#packages.x86_64-linux.default || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/config.log
+          nix build -L --show-trace --keep-failed .#packages.x86_64-linux.default || sudo ls /tmp/nix-build-hello-2.12.1.drv-0/build
 
   test3:
     runs-on: ubuntu-latest
