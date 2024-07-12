@@ -41,7 +41,7 @@ jobs:
                 overlays = [
                   (final: prev: {
                     qemu-user-static = prev.qemu-user-static.overrideAttrs {
-                      src = qemu_src
+                      src = qemu_src;
                     };
                   })    
                 ]; 
