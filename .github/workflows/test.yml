@@ -75,7 +75,7 @@ jobs:
                   cp main $out
                 '';
               };
-              packages."x86_64-linux".default = qemu_src
+              packages."x86_64-linux".default = qemu_src;
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
                   modules = [
@@ -205,6 +205,7 @@ jobs:
                         libc = frankenlibc;
                         bintools = old.bintools.override {
                           libc = frankenlibc;
+                          sharedLibraryLoader = pkgs.lib.getLib old.bintools.libc
                         };
                         #nixSupport = (old.nixSupport or {}) // {
                         #  cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
