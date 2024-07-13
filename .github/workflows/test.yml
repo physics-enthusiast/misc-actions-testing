@@ -33,7 +33,7 @@ jobs:
                 owner = "qemu-project";
                 repo = "qemu";
                 rev = "1f9823cea21c3a8de8e04b26016844aeeb2b59c6";
-                hash = "sha256-bb148N4hlXnJe/qCVZuDyX/qM0pm2ErB5STFmp0c9XM=";
+                hash = "sha256-OT7hlGEXfZfX4a+oCjvrljRtPC93cRyvtcPjn+IlZew=";
                 fetchSubmodules = true;
               };
               pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
@@ -69,13 +69,6 @@ jobs:
               packages."x86_64-linux".default = qemu_src;
               nixosConfigurations.nixos =
                 original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
-                  nixpkgs.overlays = [
-                    (final: prev: {
-                      qemu-user-static = prev.qemu-user-static.overrideAttrs {
-                        src = qemu_src;
-                      };
-                    })
-                  ]; 
                   modules = [
                     original.nixosConfigurations.nixos-nocloud-x86_64.config.formatConfigs."qcow"
                     ({ lib, ... }: {
@@ -91,7 +84,14 @@ jobs:
                         };
                       };
                     })
-                    ({ config, pkgs, lib, ... }: {
+                    ({ config, pkgs, lib, ... }: {            
+                      nixpkgs.overlays = [
+                        (final: prev: {
+                          qemu-user-static = prev.qemu-user-static.overrideAttrs {
+                            src = qemu_src;
+                          };
+                        })
+                      ];
                       boot = {
                         kernelPackages = pkgs.linuxPackages_latest;
                         binfmt = { 
