@@ -89,6 +89,7 @@ jobs:
                         (final: prev: {
                           qemu-user-static = prev.qemu-user-static.overrideAttrs {
                             src = qemu_src;
+                            passthru = prev.passthru
                           };
                         })
                       ];
