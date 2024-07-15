@@ -89,7 +89,7 @@ jobs:
                         (final: prev: {
                           qemu-user-static = prev.qemu-user-static.overrideAttrs {
                             src = qemu_src;
-                            passthru = prev.passthru;
+                            passthru = pkgsx86_64.qemu-user-static.passthru;
                           };
                         })
                       ];
@@ -233,7 +233,7 @@ jobs:
               };
             }
       - run: |
-          nix build -L --show-trace --keep-failed .#packages.x86_64-linux.default || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
+          tree $(nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default) || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
 
   test3:
     runs-on: ubuntu-latest
