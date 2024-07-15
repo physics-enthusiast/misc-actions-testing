@@ -234,17 +234,3 @@ jobs:
             }
       - run: |
           tree $(nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default) || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
-
-  test3:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          repository: physics-enthusiast/frankenlibc
-          submodules: 'true'
-      - run: |
-          sudo mkdir -p /opt/rump && sudo chown -R $USER /opt/
-          for file in `find patches/ -maxdepth 1 -type f` ; do patch -p1 < $file ; done
-          for file in `find patches/linux/ -maxdepth 1 -type f` ; do patch -p1 < $file ; done
-          ./build.sh -F CFLAGS="-fcommon -Wno-error=maybe-uninitialized" -j2 -d /opt/rump -q -k linux notest
