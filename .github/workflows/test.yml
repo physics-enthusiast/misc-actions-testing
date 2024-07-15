@@ -32,7 +32,7 @@ jobs:
               qemu_src = pkgsx86_64.fetchFromGitLab {
                 owner = "qemu-project";
                 repo = "qemu";
-                rev = "9622c697d1bb2addec4added61e3a0f6ad5e8bfb";
+                rev = "d89c64f6fd1c949ab6d698f4970fd9fd1b177f8e";
                 hash = "sha256-bB+jrhDDm0cAtevtrb5lGa19R2UUDwIsiYQwOTIqTqY=";
                 fetchSubmodules = true;
               };
