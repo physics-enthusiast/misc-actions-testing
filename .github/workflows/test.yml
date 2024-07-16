@@ -33,7 +33,7 @@ jobs:
                 owner = "qemu-project";
                 repo = "qemu";
                 rev = "fb3cb376e9d97970b29f571b22f8729f7ca8b945";
-                hash = "sha256-Cx6pLFsgYbdgltJM9T6WdCwMcmTiuV5xP9lL9/aMYyU=";
+                hash = "sha256-cfSOjukVs0wYAHiklcQS/PhQuBl2rNa0nwlNw+Z6FYs=";
                 fetchSubmodules = true;
               };
               pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
