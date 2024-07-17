@@ -33,7 +33,7 @@ jobs:
                 owner = "qemu-project";
                 repo = "qemu";
                 rev = "e2f346aa98646e84eabe0256f89d08e89b1837cf";
-                hash = "sha256-bB+jrhDDm0cAtevtrb5lGa19R2UUDwIsiYQwOTIqTqY=";
+                hash = "sha256-QcGwpNG259VZ8QWuf6F2RB0seqv12Rl1sJMIHx4lsA0=";
                 fetchSubmodules = true;
               };
               pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
@@ -55,8 +55,8 @@ jobs:
                 buildPhase = ''
                   echo 'fn main() { }' > main.rs
                   gcc -dumpmachine
-                  export QEMU_STRACE=1
-                  export RUSTC_LOG=debug
+                  #export QEMU_STRACE=1
+                  #export RUSTC_LOG=debug
                   #export LD_DEBUG=all
                   declare -p
                   rustc main.rs
