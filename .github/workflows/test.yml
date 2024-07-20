@@ -19,7 +19,7 @@ jobs:
           contents: |
             {
             inputs = {
-              nixpkgs.url = "github:physics-enthusiast/nixpkgs/qemu-no-vdso";
+              nixpkgs.url = "github:NixOS/nixpkgs/master";
               original = {
                 url = "github:physics-enthusiast/nixos-image/main";
                 inputs.nixpkgs.follows = "nixpkgs";
@@ -84,20 +84,11 @@ jobs:
                         };
                       };
                     })
-                    ({ config, pkgs, lib, ... }: {            
-                      nixpkgs.overlays = [
-                        (final: prev: {
-                          qemu-user-static = prev.qemu-user-static.overrideAttrs {
-                            src = qemu_src;
-                            passthru = pkgsx86_64.qemu-user-static.passthru;
-                          };
-                        })
-                      ];
+                    ({ config, pkgs, lib, ... }: {
                       boot = {
                         kernelPackages = pkgs.linuxPackages_latest;
                         binfmt = { 
                           emulatedSystems = [ "aarch64-linux" "armv7l-linux" ];
-                          preferStaticEmulators = true;
                         };
                       };
                     })
