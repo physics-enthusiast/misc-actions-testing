@@ -109,4 +109,5 @@ jobs:
               };
             }
       - run: |
-          tree $(nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default) || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
+          nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default
+          #tree $(nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default) || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
