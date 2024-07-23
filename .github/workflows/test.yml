@@ -25,11 +25,11 @@ jobs:
               let
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
                 lkl = pkgs.fetchFromGitHub {
-                    owner = "physics-enthusiast";
-                    repo = "frankenlibc";
-                    rev = "ee116179a3bc0ddc6038cd306528fd872af8e75b";
-                    sha256 = pkgs.lib.fakeHash;
-                  };
+                  owner = "physics-enthusiast";
+                  repo = "frankenlibc";
+                  rev = "ee116179a3bc0ddc6038cd306528fd872af8e75b";
+                  sha256 = pkgs.lib.fakeHash;
+                };
                 frankenlibc = pkgs.stdenv.mkDerivation {
                   pname = "frankenlibc";
                   version = "4.19"; #version of the kernel
