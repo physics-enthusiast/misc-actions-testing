@@ -27,7 +27,7 @@ jobs:
                 lkl = pkgs.fetchFromGitHub {
                   owner = "physics-enthusiast";
                   repo = "lkl-linux";
-                  rev = "ee116179a3bc0ddc6038cd306528fd872af8e75b";
+                  rev = "sha256-2MGUnrT65PZorgmwt05l7t7hHfvuYD75d6n3Kofrf3M=";
                   sha256 = pkgs.lib.fakeHash;
                 };
                 frankenlibc = pkgs.stdenv.mkDerivation {
