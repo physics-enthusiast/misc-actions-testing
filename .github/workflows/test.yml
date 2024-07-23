@@ -10,130 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          df -h
-      - uses: DamianReeves/write-file-action@master
-        with:
-          path: flake.nix
-          write-mode: overwrite
-          contents: |
-            {
-            inputs = {
-              nixpkgs.url = "github:NixOS/nixpkgs/master";
-              original = {
-                url = "github:physics-enthusiast/nixos-image/main";
-                inputs.nixpkgs.follows = "nixpkgs";
-              };
-            };
-
-            outputs = { self, nixpkgs, original }:
-            let
-              pkgsx86_64 = import nixpkgs { system = "x86_64-linux"; };
-              qemu_src = pkgsx86_64.fetchFromGitLab {
-                owner = "qemu-project";
-                repo = "qemu";
-                rev = "e2f346aa98646e84eabe0256f89d08e89b1837cf";
-                hash = "sha256-QcGwpNG259VZ8QWuf6F2RB0seqv12Rl1sJMIHx4lsA0=";
-                fetchSubmodules = true;
-              };
-              pkgsAarch64 = import nixpkgs { system = "aarch64-linux"; };
-            in
-              original.outputs // {
-              packages."aarch64-linux".default = pkgsAarch64.stdenv.mkDerivation {
-                name = "out";
-
-                unpackPhase = "true";
-
-                nativeBuildInputs = [
-                  pkgsAarch64.rustc
-                ];
-
-                depsBuildBuild = [
-                  pkgsAarch64.strace
-                ];
-
-                buildPhase = ''
-                  echo 'fn main() { }' > main.rs
-                  gcc -dumpmachine
-                  #export QEMU_STRACE=1
-                  #export RUSTC_LOG=debug
-                  #export LD_DEBUG=all
-                  declare -p
-                  rustc main.rs
-                '';
-
-                installPhase = ''
-                  cp main $out
-                '';
-              };
-              packages."x86_64-linux".default = qemu_src;
-              nixosConfigurations.nixos =
-                original.nixosConfigurations.nixos-nocloud-x86_64.extendModules {
-                  modules = [
-                    original.nixosConfigurations.nixos-nocloud-x86_64.config.formatConfigs."qcow"
-                    ({ lib, ... }: {
-                      options = {
-                        fileExtension = lib.mkOption {
-                          type = lib.types.str;
-                          description = "Declare the path of the wanted file in the output directory";
-                          default = "";
-                        };
-                        formatAttr = lib.mkOption {
-                          type = lib.types.str;
-                          description = "Declare the default attribute to build";
-                        };
-                      };
-                    })
-                    ({ config, pkgs, lib, ... }: {
-                      boot = {
-                        kernelPackages = pkgs.linuxPackages_latest;
-                        binfmt = { 
-                          emulatedSystems = [ "aarch64-linux" "armv7l-linux" ];
-                        };
-                      };
-                    })
-                  ];
-                };
-              };
-            }
-      - name: Set Swap Space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 16
-      - name: Setup Binfmt
-        uses: docker/setup-qemu-action@v3
-        with:
-          image: 	tonistiigi/binfmt:desktop-master
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        with:
-          extra-conf: |
-            extra-platforms = aarch64-linux
-      - run: |
-          cat /etc/nix/nix.conf
-          nix build --no-link .#packages.x86_64-linux.default
-          nix build --print-build-logs --no-link .#packages.aarch64-linux.default
-      - uses: catchpoint/workflow-telemetry-action@master
-      - uses: physics-enthusiast/nixos-run-action@main
-        id: rebuild
-        with:
-          filesize: 40G
-          memory: 16G
-          image-path: /mnt/nixos.qcow2
-          cmd: |
-            nix build --no-link --log-lines 100 "/tmp/mnt"#nixosConfigurations.nixos.config.system.build.toplevel
-            sudo nixos-rebuild boot --max-jobs auto --cores 2 --flake '/tmp/mnt#nixos'
-      - uses: physics-enthusiast/nixos-run-action@main
-        with:
-          filesize: 40G
-          memory: 16G
-          image-path: /mnt/nixos.qcow2
-          cmd: |
-            nix build --print-build-logs --no-link /tmp/mnt#packages.aarch64-linux.default
-
-  test2:
-    runs-on: ubuntu-latest
-    steps:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: DamianReeves/write-file-action@master
@@ -148,15 +24,21 @@ jobs:
               outputs = { self, nixpkgs }:
               let
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
+                lklSrc = pkgs.fetchFromGitHub {
+                    owner = "physics-enthusiast";
+                    repo = "frankenlibc";
+                    rev = "ee116179a3bc0ddc6038cd306528fd872af8e75b";
+                    sha256 = pkgs.lib.fakeHash;
+                  };
                 frankenlibc = pkgs.stdenv.mkDerivation {
                   pname = "frankenlibc";
                   version = "4.19"; #version of the kernel
                   src = pkgs.fetchFromGitHub {
                     owner = "physics-enthusiast";
                     repo = "frankenlibc";
-                    rev = "7ed672ed9ba31a6e39ba15f82902016b2f49d8a5";
+                    rev = "0bcefe77417bbbb1d9de0ca0bb2a96a95cf6fd57";
                     fetchSubmodules = true;
-                    sha256 = "sha256-4yJ31OK8RxJEuUHldZ7ip8sEvwPZwB4SyU+ub7m4218=";
+                    sha256 = pkgs.lib.fakeHash;
                   };
 
                   buildInputs = [ pkgs.zlib ];
@@ -164,6 +46,9 @@ jobs:
                   nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
                   
                   postPatch = ''
+                    rm -r linux
+                    mkdir -p linux
+                    cp -a ${lkl}/. linux/
                     patchShebangs --build ./
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
