@@ -46,7 +46,7 @@ jobs:
                   nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
                   
                   postPatch = ''
-                    rm -r linux
+                    rm -rf linux
                     mkdir -p linux
                     cp -R ${lkl}/. linux/
                     patchShebangs --build ./
