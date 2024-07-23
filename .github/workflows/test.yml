@@ -48,7 +48,7 @@ jobs:
                   postPatch = ''
                     rm -r linux
                     mkdir -p linux
-                    cp -a ${lkl}/. linux/
+                    cp -d ${lkl}/. linux/
                     patchShebangs --build ./
                     substituteInPlace build.sh \
                       --replace-fail '/bin/echo' 'echo' \
