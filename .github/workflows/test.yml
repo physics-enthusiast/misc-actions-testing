@@ -109,5 +109,6 @@ jobs:
               };
             }
       - run: |
-          nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default 2>&1 | grep -i -e "undecl" -e "implicit decl" | cut -d"'" -f 2
+          nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default 2>&1 | tee log.txt
+          cat log.txt | grep -i -e "undecl" -e "implicit decl" | cut -d"'" -f 2
           #tree $(nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default) || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
