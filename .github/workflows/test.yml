@@ -15,6 +15,7 @@ jobs:
           cd linux
           make defconfig ARCH=um -j$(nproc)
           make ARCH=um -j$(nproc)
+          ls -R
     
   test2:
     runs-on: ubuntu-latest
