@@ -37,7 +37,8 @@ jobs:
       - run: |
           curl -o ./slirp https://xena.greedo.xeserv.us/files/slirp
           chmod +x ./slirp
-          curl --create-dirs -o ./chroot/tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static
+          mkdir -p ./chroot/etc
+          curl -o ./chroot/tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static
           chmod +x ./chroot/tini
           cp ./init.sh ./chroot/init.sh
           cp ./resolv.conf ./chroot/etc/resolv.conf
@@ -51,7 +52,7 @@ jobs:
           cd ..
           cp ./linux/linux ./uml
           chmod +x ./uml
-          TMP=/chroot exec ./chroot/tini ./uml root=/dev/root rootflags=/chroot rootfstype=hostfs rw mem=128M udb0=alpine-root verbose eth0=slirp,,/slirp init=/init.sh
+          TMP=/chroot exec ./chroot/tini ./uml root=/dev/root rootflags=./chroot rootfstype=hostfs rw mem=128M udb0=alpine-root verbose eth0=slirp,,/slirp init=/init.sh
     
   test2:
     runs-on: ubuntu-latest
