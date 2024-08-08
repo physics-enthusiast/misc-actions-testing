@@ -14,6 +14,7 @@ jobs:
           sudo apt-get -y install build-essential flex bison xz-utils wget ca-certificates bc
           git clone -b master --single-branch --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux
           cd linux
+          make defconfig ARCH=um -j$(nproc)
           make ARCH=um -j$(nproc)
     
   test2:
