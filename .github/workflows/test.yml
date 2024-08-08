@@ -11,11 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          curl -o ./slirp https://xena.greedo.xeserv.us/files/slirp
+          chmod +x ./slirp
+          curl --create-dirs -o ./chroot/tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static
+          chmod +x ./chroot/tini
+          cd chroot
+          wget -O - http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64/alpine-minirootfs-3.10.0-x86_64.tar.gz | tar xz
+          cd ..
           git clone -b master --single-branch --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux
           cd linux
           make defconfig ARCH=um -j$(nproc)
           make ARCH=um -j$(nproc)
-          ls -R
+          cd ..
+          cp ./linux/linux ./uml
+          
     
   test2:
     runs-on: ubuntu-latest
