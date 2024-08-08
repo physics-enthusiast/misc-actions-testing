@@ -52,7 +52,7 @@ jobs:
           cd ..
           cp ./linux/linux ./uml
           chmod +x ./uml
-          TMP=./chroot exec ./chroot/tini ./uml root=/dev/root rootflags=./chroot rootfstype=hostfs rw mem=128M udb0=alpine-root verbose eth0=slirp,,/slirp init=/init.sh
+          TMP=./chroot ./uml root=/dev/root rootflags=./chroot rootfstype=hostfs rw mem=128M udb0=alpine-root verbose eth0=slirp,,/slirp init=/init.sh
     
   test2:
     runs-on: ubuntu-latest
