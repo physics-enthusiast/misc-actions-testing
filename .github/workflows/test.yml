@@ -10,50 +10,11 @@ jobs:
   test1:
     runs-on: ubuntu-latest
     steps:
-      - uses: DamianReeves/write-file-action@master
-        with:
-          path: init.sh
-          write-mode: overwrite
-          contents: |
-            #!/bin/sh
-            
-            mount -t proc proc proc/
-            mount -t sysfs sys sys/
-            ifconfig eth0 10.0.2.14 netmask 255.255.255.240 broadcast 10.0.2.15
-            route add default gw 10.0.2.2
-            
-            reset
-            uname -av
-            echo "networking set up"
-            
-            exec /tini /bin/sh
-      - uses: DamianReeves/write-file-action@master
-        with:
-          path: resolv.conf
-          write-mode: overwrite
-          contents: |
-            nameserver 1.1.1.1
-            nameserver 8.8.8.8
       - run: |
-          curl -o ./slirp https://xena.greedo.xeserv.us/files/slirp
-          chmod +x ./slirp
-          mkdir -p ./chroot/etc
-          curl -o ./chroot/tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static
-          chmod +x ./chroot/tini
-          cp ./init.sh ./chroot/init.sh
-          cp ./resolv.conf ./chroot/etc/resolv.conf
-          cd chroot
-          wget -O - http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64/alpine-minirootfs-3.10.0-x86_64.tar.gz | tar xz
-          cd ..
           git clone -b master --single-branch --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux
           cd linux
-          make defconfig ARCH=um -j$(nproc)
-          make ARCH=um -j$(nproc)
-          cd ..
-          cp ./linux/linux ./uml
-          chmod +x ./uml
-          TMP=./chroot ./uml root=/dev/root rootflags=./chroot rootfstype=hostfs rw mem=128M udb0=alpine-root verbose eth0=slirp,,/slirp init=/init.sh
-    
+          ./tools/testing/kunit/kunit.py run
+
   test2:
     runs-on: ubuntu-latest
     steps:
