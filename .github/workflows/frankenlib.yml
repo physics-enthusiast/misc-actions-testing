@@ -1,0 +1,113 @@
+name: Test
+on:
+  workflow_dispatch:
+concurrency:
+  group: test
+  cancel-in-progress: true
+
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: DeterminateSystems/nix-installer-action@main
+      #- uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: flake.nix
+          write-mode: overwrite
+          contents: |
+            {
+              inputs = {
+                nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+              };
+              outputs = { self, nixpkgs }:
+              let
+                pkgs = import nixpkgs { system = "x86_64-linux"; };
+                lkl = pkgs.fetchFromGitHub {
+                  owner = "physics-enthusiast";
+                  repo = "lkl-linux";
+                  rev = "ee116179a3bc0ddc6038cd306528fd872af8e75b";
+                  sha256 = "sha256-2MGUnrT65PZorgmwt05l7t7hHfvuYD75d6n3Kofrf3M=";
+                };
+                frankenlibc = pkgs.stdenv.mkDerivation {
+                  pname = "frankenlibc";
+                  version = "4.19"; #version of the kernel
+                  src = pkgs.fetchFromGitHub {
+                    owner = "physics-enthusiast";
+                    repo = "frankenlibc";
+                    rev = "904689147b6e292c25f9015a16dd19bcf0c3a05e";
+                    fetchSubmodules = true;
+                    sha256 = "sha256-vOdyyKFS7AIjC0pDp/bErq5tvJcR35TdI9QIkJuEI5g=";
+                  };
+
+                  buildInputs = [ pkgs.zlib ];
+
+                  nativeBuildInputs = [ pkgs.which pkgs.bison pkgs.flex pkgs.bc pkgs.python3 ];
+                  
+                  postPatch = ''
+                    rm -rf linux
+                    cp -a ${lkl} linux
+                    chmod +w -R linux
+                    patchShebangs --build ./
+                    substituteInPlace build.sh \
+                      --replace-fail '/bin/echo' 'echo' \
+                      --replace-fail '#!/bin/sh' '#!${pkgs.stdenv.shell}' \
+                      --replace-fail '-static' '''
+                    substituteInPlace Makefile \
+                      --replace-fail 'build.sh' "./build.sh -d $out -k linux notest"
+                    substituteInPlace src/build.sh \
+                      --replace-fail '/bin/pwd' 'pwd'
+                    substituteInPlace linux/tools/lkl/Makefile.autoconf \
+                      --replace-fail '/bin/echo' 'echo'
+                  '';
+
+                  env.NIX_CFLAGS_COMPILE = toString [
+                    "-Wno-error=maybe-uninitialized"
+                    "-U_FORTIFY_SOURCE"
+                  ];
+
+                  dontInstall = true;
+                };
+                pkgsFranken = import nixpkgs {
+                  system = "x86_64-linux";
+                  config.replaceStdenv = {pkgs}:
+                  let
+                    inherit (pkgs) stdenv;
+                  in
+                    (stdenv.override {
+                      cc = stdenv.cc.override (old: {
+                        libc = frankenlibc;
+                        bintools = old.bintools.override {
+                          libc = frankenlibc;
+                          sharedLibraryLoader = pkgs.lib.getLib old.bintools.libc;
+                        };
+                        #nixSupport = (old.nixSupport or {}) // {
+                        #  cc-cflags = (old.nixSupport.cc-cflags or []) ++ [
+                        #    "--sysroot {frankenlibc}"
+                        #  ];
+                        #};
+                      } // pkgs.lib.optionalAttrs old.isGNU {
+                        cc = old.cc.overrideAttrs (prev: {
+                          libcCross = frankenlibc;
+                          # force the check for cross-compilation on without
+                          # actually changing the triplet passed to cc (to
+                          # isolate programs compiled with it from host headers)
+                          stdenv = old.cc.stdenv // {
+                            targetPlatform = old.cc.stdenv.targetPlatform // {
+                              isFranken = true;
+                            };
+                          };
+                        });
+                      });
+                      allowedRequisites = null;
+                    });
+                };
+              in
+              {
+                packages."x86_64-linux".default = pkgsFranken.stdenv.cc.libc; #pkgsFranken.hello;
+              };
+            }
+      - run: |
+          nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default 2>&1 | tee log.txt
+          cat log.txt | grep -i -e "undecl" -e "implicit decl" | cut -d"'" -f 2
+          #tree $(nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default) || sudo cat /tmp/nix-build-hello-2.12.1.drv-0/build/hello-2.12.1/config.log
