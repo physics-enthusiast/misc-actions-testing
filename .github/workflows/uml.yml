@@ -1,0 +1,16 @@
+name: Test
+on:
+  push:
+  workflow_dispatch:
+concurrency:
+  group: test
+  cancel-in-progress: true
+
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          git clone -b master --single-branch --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux
+          cd linux
+          ./tools/testing/kunit/kunit.py run
