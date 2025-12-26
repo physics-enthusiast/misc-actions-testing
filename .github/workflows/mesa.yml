@@ -42,7 +42,7 @@ jobs:
                 });
               in
               {
-                packages."x86_64-linux".default = mesa;
+                packages."x86_64-linux".default = venus-protocol;
               };
             }
       - run: |
