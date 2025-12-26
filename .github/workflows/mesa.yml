@@ -40,7 +40,7 @@ jobs:
                     owner = "mesa";
                     repo = "mesa";
                     rev = "0d5db86eba611f55a87aa431aa629f9fdb4f4b89";
-                    hash = "sha256-Saf6fBWXDRNa9v5OPfWzhS9ZOwjzcSsvK+tLWNigwFo=";
+                    hash = "sha256-C+RL5HzhQhkt4E2WLg5dSDFugjqvkAKz3xMs1pp85i8=";
                     nativeBuildInputs = [ python3 ];
                     postFetch = ''
                       python3 ${venus-protocol}/vn_protocol.py --outdir $out/src/virtio/venus-protocol
