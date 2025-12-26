@@ -1,0 +1,33 @@
+name: Test
+on:
+  push:
+  workflow_dispatch:
+concurrency:
+  group: test
+  cancel-in-progress: true
+
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: DeterminateSystems/nix-installer-action@main
+      #- uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DamianReeves/write-file-action@master
+        with:
+          path: flake.nix
+          write-mode: overwrite
+          contents: |
+            {
+              inputs = {
+                nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+              };
+              outputs = { self, nixpkgs }:
+              let
+                pkgs = import nixpkgs { system = "x86_64-linux"; };
+              in
+              {
+                packages."x86_64-linux".default = pkgs.mesa;
+              };
+            }
+      - run: |
+          nix build -L --print-out-paths --show-trace --keep-failed .#packages.x86_64-linux.default 2>&1 | tee log.txt
