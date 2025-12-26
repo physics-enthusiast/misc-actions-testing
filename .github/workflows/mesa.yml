@@ -41,7 +41,7 @@ jobs:
                     nativeBuildInputs = [ pkgs.python3 ];
                     postFetch = "
                       python3 ${venus-protocol}/vn_protocol.py --outdir $out/src/virtio/venus-protocol
-                      exit 1
+                      exit 2
                     ";
                   };
                 });
