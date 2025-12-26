@@ -39,7 +39,7 @@ jobs:
                     domain = "gitlab.freedesktop.org";
                     owner = "mesa";
                     repo = "mesa";
-                    rev = "mesa-25.2.6";
+                    rev = "766909b32110343c8a609188c0c76bd3b8df01af";
                     hash = "sha256-erfvNRaYor3k8gVVClyiBJsgyaOv7BMFd1NSgieTY5I=";
                     nativeBuildInputs = [ python3 ];
                     postFetch = ''
