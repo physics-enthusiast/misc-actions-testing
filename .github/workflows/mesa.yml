@@ -47,7 +47,7 @@ jobs:
                 });
               in
               {
-                packages."x86_64-linux".default = test;
+                packages."x86_64-linux".default = mesa;
               };
             }
       - run: |
