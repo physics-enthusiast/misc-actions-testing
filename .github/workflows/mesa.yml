@@ -35,7 +35,7 @@ jobs:
                 });
               in
               {
-                packages."x86_64-linux".default = pkgs.mesa;
+                packages."x86_64-linux".default = mesa;
               };
             }
       - run: |
