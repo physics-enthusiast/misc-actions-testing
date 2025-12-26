@@ -39,8 +39,8 @@ jobs:
                     domain = "gitlab.freedesktop.org";
                     owner = "mesa";
                     repo = "mesa";
-                    rev = "766909b32110343c8a609188c0c76bd3b8df01af";
-                    hash = "sha256-FbpG7pvGlslGKWWtjz5+QczkF9hXPoQlBn9WGm6/35Q=";
+                    rev = "936a0b75e3dcebc6af48eb149cdd7f564aeed8a9";
+                    hash = "sha256-FbpGapvGlslGKWWtjz5+QczkF9hXPoQlBn9WGm6/35Q=";
                     nativeBuildInputs = [ python3 ];
                     postFetch = ''
                       python3 ${venus-protocol}/vn_protocol.py --outdir $out/src/virtio/venus-protocol
