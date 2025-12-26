@@ -24,6 +24,18 @@ jobs:
               outputs = { self, nixpkgs }:
               let
                 pkgs = import nixpkgs { system = "x86_64-linux"; };
+                test = pkgs.fetchFromGitLab {
+                  domain = "gitlab.freedesktop.org";
+                  owner = "mesa";
+                  repo = "mesa";
+                  rev = "mesa-25.2.6";
+                  hash = "sha256-erfvNR1Yor3k8gVVClyiBJsgyaOv7BMFd1NSgieTY5I=";
+                  nativeBuildInputs = [ pkgs.python3 ];
+                  postFetch = ''
+                    python3 ${venus-protocol}/vn_protocol.py --outdir $out/src/virtio/venus-protocol
+                    exit 1
+                  '';
+                };
                 venus-protocol = pkgs.fetchFromGitLab {
                   domain = "gitlab.freedesktop.org";
                   owner = "virgl";
@@ -47,7 +59,7 @@ jobs:
                 });
               in
               {
-                packages."x86_64-linux".default = mesa;
+                packages."x86_64-linux".default = test;
               };
             }
       - run: |
