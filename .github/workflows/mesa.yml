@@ -28,6 +28,7 @@ jobs:
                   mako
                 ]);
                 venus-protocol = pkgs.stdenv.mkDerivation {
+                  name = "venus-protocol";
                   src = pkgs.fetchFromGitLab {
                     domain = "gitlab.freedesktop.org";
                     owner = "virgl";
