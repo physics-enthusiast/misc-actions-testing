@@ -27,12 +27,15 @@ jobs:
                 python3 = pkgs.python3.withPackages (python-pkgs: with python-pkgs; [
                   mako
                 ]);
-                venus-protocol = pkgs.fetchFromGitLab {
-                  domain = "gitlab.freedesktop.org";
-                  owner = "virgl";
-                  repo = "venus-protocol";
-                  rev = "9fa07f3cf7810df293abe0ff6a96032192f960d3";
-                  hash = "sha256-g5Sbgr7I/2Nlt2h5yNWH4XM5sr6WPVgVfhFvgeBgZvU=";
+                venus-protocol = pkgs.mkDerivation {
+                  src = pkgs.fetchFromGitLab {
+                    domain = "gitlab.freedesktop.org";
+                    owner = "virgl";
+                    repo = "venus-protocol";
+                    rev = "9fa07f3cf7810df293abe0ff6a96032192f960d3";
+                    hash = "sha256-g5Sbgr7I/2Nlt2h5yNWH4XM5sr6WPVgVfhFvgeBgZvU=";
+                  };
+                  nativeBuildInputs = [ meson ];
                 };
                 mesa = pkgs.mesa.overrideAttrs (oldAttrs: {
                   src = pkgs.fetchFromGitLab {
@@ -41,9 +44,8 @@ jobs:
                     repo = "mesa";
                     rev = "0d5db86eba611f55a87aa431aa629f9fdb4f4b89";
                     hash = "sha256-C+RL5HzhQhkt4E2WLg5dSDFugjqvkAKz3xMs1pp85i8=";
-                    nativeBuildInputs = [ python3 ];
                     postFetch = ''
-                      python3 ${venus-protocol}/vn_protocol.py --outdir $out/src/virtio/venus-protocol
+                      cp -r ${venus-protocol}/vn_protocol_driver_* $out/src/virtio/venus-protocol/
                     '';
                   };
                 });
