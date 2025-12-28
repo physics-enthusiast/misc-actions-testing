@@ -37,6 +37,9 @@ jobs:
                     hash = "sha256-g5Sbgr7I/2Nlt2h5yNWH4XM5sr6WPVgVfhFvgeBgZvU=";
                   };
                   nativeBuildInputs = [ pkgs.meson pkgs.ninja python3 ];
+                  postBuild = ''
+                    cp -r build $out
+                  '';
                 };
                 mesa = pkgs.mesa.overrideAttrs (oldAttrs: {
                   src = pkgs.fetchFromGitLab {
