@@ -38,7 +38,7 @@ jobs:
                   };
                   nativeBuildInputs = [ pkgs.meson pkgs.ninja python3 ];
                   postBuild = ''
-                    cp -r build $out
+                    cp -r /build/source/build $out
                   '';
                 };
                 mesa = pkgs.mesa.overrideAttrs (oldAttrs: {
