@@ -47,7 +47,7 @@ jobs:
                     owner = "mesa";
                     repo = "mesa";
                     rev = "0d5db86eba611f55a87aa431aa629f9fdb4f4b89";
-                    hash = "sha256-C+RL5HzhQhkt4E2WLg5dSDFugjqvkAKz3xMs1pp85i8=";
+                    hash = "sha256-TA9aWAt7XCOzdRN+2Nlr/x31hE4KYt36/5rs+QbWPaw=";
                     postFetch = ''
                       cp -r ${venus-protocol}/vn_protocol_driver_* $out/src/virtio/venus-protocol/
                     '';
