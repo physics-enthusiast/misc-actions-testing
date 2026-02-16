@@ -12,4 +12,4 @@ jobs:
     steps:
       - run: |
           brew install mesa vulkan-tools
-          vulkaninfo
+          vulkaninfo --summary
