@@ -1,0 +1,15 @@
+name: Test
+on:
+  workflow_dispatch:
+  push:
+concurrency:
+  group: test
+  cancel-in-progress: true
+
+jobs:
+  test1:
+    runs-on: macos-latest
+    steps:
+      - run: |
+        brew install mesa
+        vulkaninfo
