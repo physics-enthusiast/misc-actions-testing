@@ -11,5 +11,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          brew install mesa
+          brew install mesa vulkan-tools
           vulkaninfo
