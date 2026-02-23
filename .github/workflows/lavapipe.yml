@@ -17,5 +17,5 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: |
-          cd C:/bin
+          cd C:\Windows\System32
           ls
