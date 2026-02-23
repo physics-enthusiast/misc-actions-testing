@@ -17,5 +17,5 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: |
-          cd C:\Windows\System32
-          ls
+          winget install -e --id KhronosGroup.VulkanSDK
+          vulkaninfo --summary
