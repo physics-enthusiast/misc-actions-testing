@@ -21,4 +21,4 @@ jobs:
           vulkan-query-version: 1.4.304.1
       - run: |
           winget install -e --id KhronosGroup.VulkanSDK
-          vulkaninfo --summary
+          C:\VulkanSDK\1.4.304.1\runtime\x64\vulkaninfo.exe --summary
