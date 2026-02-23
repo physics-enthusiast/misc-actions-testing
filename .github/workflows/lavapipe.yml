@@ -29,4 +29,5 @@ jobs:
         with:
           path: ${{github.workspace}}
       - run: |
+          ls
           C:\VulkanSDK\${{ env.vulkanSdkVersion }}\runtime\x64\vulkaninfo.exe --summary
