@@ -6,6 +6,9 @@ concurrency:
   group: test
   cancel-in-progress: true
 
+env:
+  vulkanSdkVersion: '1.4.328.1'
+
 jobs:
   test1:
     runs-on: macos-latest
@@ -16,6 +19,12 @@ jobs:
   test2:
     runs-on: windows-latest
     steps:
-      - uses: humbletim/install-vulkan-sdk@v1.2
+      - name: Setup Vulkan SDK 
+        uses: jakoch/install-vulkan-sdk-action@v1
+        with:
+          vulkan_version: ${{ env.vulkanSdkVersion }}
+          install_runtime: true
+          cache: true
+          stripdown: false
       - run: |
-          vulkaninfo --summary
+          C:\VulkanSDK\${{ env.vulkanSdkVersion }}\runtime\x64\vulkaninfo.exe --summary
