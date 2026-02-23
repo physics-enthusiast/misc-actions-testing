@@ -16,9 +16,6 @@ jobs:
   test2:
     runs-on: windows-latest
     steps:
-      - uses: humbletim/setup-vulkan-sdk@v1.2.1
-        with: 
-          vulkan-query-version: 1.4.304.1
+      - uses: humbletim/install-vulkan-sdk@v1.2
       - run: |
-          winget install -e --id KhronosGroup.VulkanSDK
-          C:\VulkanSDK\1.4.304.1\runtime\x64\vulkaninfo.exe --summary
+          vulkaninfo --summary
