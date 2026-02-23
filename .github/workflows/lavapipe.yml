@@ -51,5 +51,5 @@ jobs:
           reg add "HKLM\SOFTWARE\WOW6432Node\Khronos\Vulkan\ExplicitLayers" /v 'C:\VulkanSDK\${{ env.vulkanSdkVersion }}\Bin32\VkLayer_khronos_synchronization2.json' /t REG_DWORD /d 0 /f /reg:64
           reg add "HKLM\SOFTWARE\WOW6432Node\Khronos\Vulkan\ExplicitLayers" /v 'C:\VulkanSDK\${{ env.vulkanSdkVersion }}\Bin32\VkLayer_khronos_validation.json' /t REG_DWORD /d 0 /f /reg:64
       - run: |
-          ls
+          ls ${{ github.workspace }}/dep/mesa/
           C:\VulkanSDK\${{ env.vulkanSdkVersion }}\runtime\x64\vulkaninfo.exe --summary
