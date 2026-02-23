@@ -16,6 +16,7 @@ jobs:
   test2:
     runs-on: windows-latest
     steps:
+      - uses: humbletim/setup-vulkan-sdk@v1.2.1
       - run: |
           winget install -e --id KhronosGroup.VulkanSDK
           vulkaninfo --summary
