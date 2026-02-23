@@ -19,12 +19,12 @@ jobs:
   test2:
     runs-on: windows-latest
     steps:
-      - name: Setup Vulkan SDK 
-        uses: jakoch/install-vulkan-sdk-action@v1
+      - uses: jakoch/install-vulkan-sdk-action@v1
         with:
           vulkan_version: ${{ env.vulkanSdkVersion }}
           install_runtime: true
           cache: true
           stripdown: false
+      - uses: f3d-app/install-mesa-windows-action@v1
       - run: |
           C:\VulkanSDK\${{ env.vulkanSdkVersion }}\runtime\x64\vulkaninfo.exe --summary
