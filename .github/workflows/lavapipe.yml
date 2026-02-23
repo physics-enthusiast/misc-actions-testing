@@ -26,5 +26,7 @@ jobs:
           cache: true
           stripdown: false
       - uses: f3d-app/install-mesa-windows-action@v1
+        with:
+          path: ${{github.workspace}}
       - run: |
           C:\VulkanSDK\${{ env.vulkanSdkVersion }}\runtime\x64\vulkaninfo.exe --summary
