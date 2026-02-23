@@ -25,9 +25,9 @@ jobs:
           install_runtime: true
           cache: true
           stripdown: false
-      - uses: f3d-app/install-mesa-windows-action@v1
-        with:
-          path: ${{github.workspace}}
+      - uses: msys2/setup-msys2@v2
+      - shell: powershell
+        run: msys2 -c 'pacman --noconfirm -S mingw-w64-x86_64-mesa'
       - run: |
           ls
           C:\VulkanSDK\${{ env.vulkanSdkVersion }}\runtime\x64\vulkaninfo.exe --summary
